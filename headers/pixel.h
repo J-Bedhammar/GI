@@ -1,13 +1,12 @@
-#ifndef PIXELS_H
-#define PIXELS_H
+#ifndef PIXEL_H
+#define PIXEL_H
 
 #include "definitions.h"
 
-class pixels() {
+class pixel() {
 	
 private:
 	ColorDbl pixelColor;
-
 public:
 
 }
