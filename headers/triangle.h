@@ -14,7 +14,7 @@ private:
 	Direction triangleNormal;
 
 public:
-	Triangle(Vertex& v0, Vertex& v1, Vertex& v2);
+	Triangle(Vertex& a, Vertex& b, Vertex& c, ColorDbl& color);
 	Direction getNormal() { return triangleNormal; }
 	bool rayIntersection(Ray& r);
 
