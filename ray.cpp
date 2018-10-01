@@ -5,8 +5,8 @@ ray::Ray(Vertex& start, Vertex& end, ColorDbl c)
 
 }
 
-void ray::triangleHit(triangle* t, Vertex& ps) 
-	:collisionTriangle(t), endPoint(ps){
+void ray::triangleHit(triangle* t, Vertex& pe) 
+	:collisionTriangle(t), endPoint(pe){
 
 
 }
