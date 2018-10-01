@@ -18,5 +18,6 @@ class camera() {
 
 public:
 	void render();
+	void createImage();
 }
 #endif
