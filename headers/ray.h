@@ -19,6 +19,8 @@ private:
 
 public:
 	Ray(Vertex& start, Vertex& end, ColorDbl c);
+	void triangleHit(triangle* t, Vertex& ps);
+
 	Vertex getStart() {return startPoint;}
 	Vertex getEnd() {return endPoint;}
 
