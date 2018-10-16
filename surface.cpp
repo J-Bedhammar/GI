@@ -5,15 +5,15 @@ Surface::Surface(const ColorDbl &color, const surfaceType st)
 
 }
 
-ColorDbl Surface::getSurface() {
+ColorDbl Surface::getSurfaceColor() {
 	
 	if(type == diffuse){
 		return surfaceColor*reflection;
 	}
-	else if (typ == specular) {
+	else if (type == specular) {
 		return surfaceColor;
 	}
 	else { // if type == lightsource
-		return ColorDbl(0, 0, 0);
+		return ColorDbl(0.0f, 0.0f, 0.0f);
 	}
 }
