@@ -3,6 +3,7 @@
 
 #include "definitions.h"
 #include "triangles.h"
+#include "surface.h"
 
 class Tetrahedron {
 private:
@@ -10,10 +11,11 @@ private:
 	Vertex top, bot1, bot2, bot3;
 	Triangle triangles[3];
 	Surface tetrahedronSurface;
-	int height;
+	float height;
+	ColorDbl tetraColor;
 
 public:
-	Tetrahedron(Vertex c, int h, Surface s);
+	Tetrahedron(Vertex c, float h, Surface s);
 	bool rayIntersection(Ray &r);
 	
 }
