@@ -11,7 +11,7 @@ private:
 	float reflection = 0.95; //3/PI??
 public:
 	Surface(const ColorDbl &color, const surfaceType st);
-	ColorDbl getSurface();
+	ColorDbl getSurfaceColor();
 
 	surfaceType type;
 }
