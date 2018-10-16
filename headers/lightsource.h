@@ -14,7 +14,7 @@ private:
 public:
 	
 	Lightsource(Triangle t, Surface s);
-	bool rayIntersect(Ray &r);
+	bool rayIntersection(Ray &r);
 }
 
 
