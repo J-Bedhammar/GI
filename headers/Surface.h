@@ -8,10 +8,10 @@ class Surface {
 
 private:
 	ColorDbl surfaceColor;
-	float reflection = 0.95; //3/PI??
+	float reflection = 0.95f; //3/PI??
 public:
 	Surface(const ColorDbl &color, const surfaceType st);
-	ColorDbl getSurface();
+	ColorDbl getSurfaceColor();
 
 	surfaceType type;
 }
