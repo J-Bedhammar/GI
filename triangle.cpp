@@ -1,7 +1,7 @@
 #include "triangle.h"
 
 
-Triangle(Vertex& a, Vertex& b, Vertex& c, ColorDbl& color)
+Triangle::Triangle(Vertex& a, Vertex& b, Vertex& c, ColorDbl& color)
 	: v0(a), v1(b), v2(c), triangleColor(color)
 {
 	//Calculate the normal
@@ -16,7 +16,7 @@ Triangle(Vertex& a, Vertex& b, Vertex& c, ColorDbl& color)
 
 
 
-bool rayIntersection(Ray& r){
+bool Triangle::rayIntersection(Ray& r){
 	const float EPSILON = 0.00000001f;
 	
 	//Get start and endpoints of the ray
