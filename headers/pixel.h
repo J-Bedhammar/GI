@@ -3,7 +3,7 @@
 
 #include "definitions.h"
 
-class pixel() {
+class Pixel() {
 	
 private:
 	ColorDbl pixelColor;

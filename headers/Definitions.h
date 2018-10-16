@@ -8,4 +8,9 @@ using Vertex = vec4;
 using ColorDbl = vec3;
 using Direction = vec3;
 
+enum surfaceType {
+	diffuse, specular, lightSource
+
+};
+
 #endif
