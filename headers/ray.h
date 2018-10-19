@@ -26,9 +26,12 @@ public:
 	Vertex getStart() {return startPoint;}
 	Vertex getEnd() {return endPoint;}
 
+	ColorDbl setColor(ColorDbl color) {rayColor = color;}
 	ColorDbl getColor() { return rayColor; }
 	Triangle* getTriangle() { return collisionTriangle; }
 	Sphere* getSphere() { return collisionSphere; }
+	Direction getDirection(){return Direction(endPoint.x-startPoint.x, endPoint.y-startPoint.y, endPoint.z-startPoint.z);}
+
 
 }
 
