@@ -1,7 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "pixels.h"
+#include "pixel.h"
 #include "scene.h"
 #include "ray.h"
 #include "Definitions.h"
@@ -16,8 +16,12 @@ class camera() {
 	const int CAMERA_VIEW = 800;
 	std::array<std::array<pixel, CAMERA_VIEW>, CAMERA_VIEW> pixels;
 
+	ColorDbl castRay(Ray& r, int num_reflections, Scene& scene);
+
 public:
-	void render();
+	void render(Scene& scene);
 	void createImage();
+
+	const int MAX_REFLECTIONS = 10;
 }
 #endif
