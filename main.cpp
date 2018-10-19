@@ -1,9 +1,9 @@
 #include <iostream>
-#include "glm/glm.hpp"
-#include "sphere.h"
-#include "tetrahedron.h"
-#include "camera.h"
-#include "triangle.h"
+#include "../glm/glm/glm.hpp"
+#include "headers/sphere.h"
+#include "headers/tetrahedron.h"
+#include "headers/camera.h"
+#include "headers/triangle.h"
 
 using namespace std;
 
@@ -36,9 +36,10 @@ int main(){
 	// Lightsource
 	cout << "Adding lightsource!" << endl;
 
-	ColorDbl white{ 1.0f, 1.0f, 1.0f};
+	Surface white{ ColorDbl{1.0f, 1.0f, 1.0f], diffuse};
+	ColorDbl whiteColor { 1.0f, 1.0f, 1.0f};
 	Triangle lightTriangle(Vertex(4,0,5,0), Vertex(5,1,5,0), Vertex(5,-1,5,0), white);
-	Lightsource light(lightTriangle, Surface(white, lightsource));
+	Lightsource light(lightTriangle);
 
 	scene.addLightsource(light);
 
@@ -47,12 +48,12 @@ int main(){
 	cout << "Render the scene!" << endl;
 	Camera camera;
 
-	camera.render();
+	camera.render(scene);
 
 	// Test if works?
 
 	Triangle testTriangle(Vertex(0,0,0,0), Vertex(1,0,0,0), Vertex(0,1,0,0), white);
-	Ray testRay = Ray(Vertex(0.3f,0.3f,-1.0f,0.0f), Vertex(0.3f,0.3f,0.1f,0.0f), white);
+	Ray testRay = Ray(Vertex(0.3f,0.3f,-1.0f,0.0f), Vertex(0.3f,0.3f,0.1f,0.0f), whiteColor);
 
 	if(testTriangle.rayIntersection(testRay))
         std::cout << "intersection!" << std::endl;
@@ -66,7 +67,7 @@ int main(){
     if(greenTetra.rayIntersection(testRay))
          std::cout << "intersection with tetra!" << std::endl;
     else
-        std::cout << "missed tetra\n";
+        std::cout << "missed tetra\n" << std::endl;
 	
 	
 	return 0;

@@ -1,7 +1,7 @@
 #ifndef LIGHTSOURCE_H
 #define LIGHTSOURCE_H
 
-#include "definitions.h"
+#include "Definitions.h"
 #include "ray.h"
 #include "triangle.h"
 
@@ -13,9 +13,9 @@ private:
 	ColorDbl whiteLight{ 1, 1, 1 };
 public:
 	
-	Lightsource(Triangle t, Surface s);
+	Lightsource(Triangle t);
 	bool rayIntersection(Ray &r);
-}
+};
 
 
 #endif

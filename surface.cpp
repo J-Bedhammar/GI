@@ -1,4 +1,9 @@
-#include "surface.h"
+#include "headers/surface.h"
+#include <iostream>
+
+Surface::Surface(){
+	std::cout << "Fake surface!" << std::endl;
+}
 
 Surface::Surface(const ColorDbl &color, const surfaceType st)
 	:surfaceColor(color), type(st) {

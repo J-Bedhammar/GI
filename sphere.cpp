@@ -1,13 +1,12 @@
-#include "sphere.h"
+#include "headers/sphere.h"
 #include <cmath>
 
 Sphere::Sphere(float r, Vertex c, Surface s) 
-	:radius(r), center(c), sphereSurface(s)
-{
+	:radius(r), center(c), sphereSurface(s){
 	
 }
 
-bool Sphere::rayIntersections(Ray &r){
+bool Sphere::rayIntersection(Ray &r){
 
 	const float EPSILON = 0.000000000001f;
 
@@ -26,7 +25,7 @@ bool Sphere::rayIntersections(Ray &r){
 
 	glm::vec3 osC = o-sphereCenter;
 	float a = 1.0f;
-	float b = glm::dot(2*l, osC);
+	float b = glm::dot(2.0f*l, osC);
 	float c = glm::dot(osC, osC) - (sphereRadius*sphereRadius);
 	
 	// Divide eq. into parts and check if valid root
@@ -64,6 +63,6 @@ bool Sphere::rayIntersections(Ray &r){
 	
 
 
-std::vec3 Sphere::getNormal(Vertex c){
+glm::vec3 Sphere::getNormal(Vertex c){
 	return glm::normalize(c - center);
 }

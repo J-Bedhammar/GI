@@ -1,7 +1,7 @@
-#include "lightsource.h"
+#include "headers/lightsource.h"
 
-Lightsource::Lightsource(Triangle t, Surface s)
-	:lightTriangle(t), lightSurface(s) {
+Lightsource::Lightsource(Triangle t)
+	:lightTriangle(t), lightSurface(t.getSurface()) {
 
 }
 

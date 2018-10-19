@@ -1,7 +1,7 @@
 #ifndef RAY_H
 #define RAY_H
 
-#include "definitions.h"
+#include "Definitions.h"
 
 class Triangle;
 class Sphere;
@@ -20,8 +20,8 @@ private:
 
 public:
 	Ray(Vertex& start, Vertex& end, ColorDbl c);
-	void triangleHit(triangle* t, Vertex& ip);
-	void sphereHit(sphere* s, Vertex& ip);
+	void triangleHit(Triangle* t, Vertex& ip);
+	void sphereHit(Sphere* s, Vertex& ip);
 
 	Vertex getStart() {return startPoint;}
 	Vertex getEnd() {return endPoint;}
@@ -33,8 +33,7 @@ public:
 	Direction getDirection(){return Direction(endPoint.x-startPoint.x, endPoint.y-startPoint.y, endPoint.z-startPoint.z);}
 
 
-}
-
+};
 
 
 #endif

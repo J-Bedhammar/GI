@@ -1,8 +1,12 @@
-#include "triangle.h"
+#include "headers/triangle.h"
+#include <iostream>
 
+Triangle::Triangle() {
+	std::cout << "Fake triangle" << std::endl;
+}
 
-Triangle::Triangle(Vertex& a, Vertex& b, Vertex& c, ColorDbl& color, Surface s)
-	: v0(a), v1(b), v2(c), triangleColor(color), triangleSurface(s)
+Triangle::Triangle(Vertex& a, Vertex& b, Vertex& c, Surface s)
+	: v0(a), v1(b), v2(c), triangleSurface(s)
 {
 	//Calculate the normal
 	Direction E1 = Direction(v1.x-v0.x, v1.y-v0.y, v1.z-v0.z); //create edge 1 
@@ -11,8 +15,8 @@ Triangle::Triangle(Vertex& a, Vertex& b, Vertex& c, ColorDbl& color, Surface s)
 	//Crossproduct of the edges gives the normal
 	triangleNormal = glm::normalize(glm::cross(E1,E2)); 
 
-	std::cout << "Created triangle with vertices: (" << v0 << ", " << v1 << ", " << v2 << ") with the normal: (" << triangleNormal.x << ", " << triangleNormal.y << ", " << triangleNormal.z << ")" << endl; 
-}
+	std::cout << "Created triangle with the normal: (" << triangleNormal.x << ", " << triangleNormal.y << ", " << triangleNormal.z << ")" << std::endl; 
+};
 
 
 

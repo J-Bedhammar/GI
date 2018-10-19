@@ -1,27 +1,26 @@
 #ifndef TRIANGLE_H
 #define TRIANGLE_H
 
-#include "definitions.h"
+#include "Definitions.h"
 #include "ray.h"
-#include "glm/glm.hpp"
+#include "surface.h"
+#include "../glm/glm/glm.hpp"
 
-class Triangle() {
+class Triangle {
 
 private:
 
 	Vertex v0, v1, v2;
-	ColorDbl triangleColor;
 	Direction triangleNormal;
 	Surface triangleSurface;
 
 public:
-	Triangle(Vertex& a, Vertex& b, Vertex& c, ColorDbl& color, Surface s);
+	Triangle();
+	Triangle(Vertex& a, Vertex& b, Vertex& c, Surface s);
 	Direction getNormal() { return triangleNormal; }
-	Surface getSurface() { return truangleSurface; }
+	Surface getSurface() { return triangleSurface; }
 	bool rayIntersection(Ray& r);
 
-
-
-}
+};
 
 #endif

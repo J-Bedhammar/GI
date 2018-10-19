@@ -2,11 +2,11 @@
 #define DEFINITIONS_H
 
 
-#include "glm/glm.hpp"
+#include "../glm/glm/glm.hpp"
 
-using Vertex = vec4;
-using ColorDbl = vec3;
-using Direction = vec3;
+using Vertex = glm::vec4;
+using ColorDbl = glm::vec3;
+using Direction = glm::vec3;
 
 enum surfaceType {
 	diffuse, specular, lightSource

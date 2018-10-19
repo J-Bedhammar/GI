@@ -1,4 +1,4 @@
-#include "pixel.h"
+#include "headers/pixel.h"
 
 void Pixel::addRay(Ray* r) {
 	intersectRays.push_back(r);

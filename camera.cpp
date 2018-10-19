@@ -1,36 +1,38 @@
-#include "camera.h"
+#include "headers/camera.h"
 
 
-void camera::render(Scene& scene) {
+void Camera::render(Scene& scene) {
 
 	float delta = 2 / float(CAMERA_VIEW);
 
 	for (int r = 0; r < CAMERA_VIEW; r++) {
 		for (int c = 0; c < CAMERA_VIEW; c++) {
 			
-			Vertex xp = Vertex(0.0f, i*delta - 0.99875f, j*delta - 0.99875f, 0.0f);
+			Vertex xp = Vertex(0.0f, r*delta - 0.99875f, c*delta - 0.99875f, 0.0f);
+
+			Vertex ps;
 
 			// choose eye
 			if(whichEye == 1)
-				Vertex ps = eye1;
+				ps = eye1;
 			if(whichEye == 2)
-				Vertex ps = eye2;
+				ps = eye2;
 
 			//end point
-			std::vec4 D = (xp - ps) * 100.0f;	//normalize?
+			glm::vec4 D = (xp - ps) * 100.0f;	//normalize?
 			Vertex pe = D + ps;
 
 			// equation ray from eye to pixel(i,j), color: white
-			Ray* r = Ray(ps, pe, ColorDbl(1, 1, 1));
+			Ray* ray = new Ray(ps, pe, ColorDbl(1, 1, 1));
 
 			//rayIntersection
-			castRay(r, 0, scene);
+			castRay(*ray, 0, scene);
 
 			pixels[r][c].addRay(ray);
 		}
 	}
 
-	std::cout << "If ray in pixel:" << endl;
+	std::cout << "If ray in pixel:" << std::endl;
 	
 	createImage();
 }
@@ -38,37 +40,37 @@ void camera::render(Scene& scene) {
 ColorDbl Camera::castRay(Ray& r, int num_reflections, Scene& scene){
 	// Find first intersectionpoint on a surface
 
-	scene.intersections(ray);
-	Surface intersectedSurface{ColorDbl(0,1,0), diffuse}
+	scene.intersections(r);
+	Surface intersectedSurface{ ColorDbl(0,1,0), diffuse };
 	Direction normal;
 
 	// Intersection with triangle?
 	if(r.getTriangle()){
 		normal = r.getTriangle()->getNormal();
-		intersectedSurface = ray.getTriangle()->getSurface();
+		intersectedSurface = r.getTriangle()->getSurface();
 	}
 	else if (r.getSphere()){
 		normal = r.getSphere()->getNormal(r.getEnd());
-		intersectedSurface = ray.getSphere()->getSurface();
+		intersectedSurface = r.getSphere()->getSurface();
 	}
 	else{	//No intersection, set values to "default"
 		r.setColor(ColorDbl(0,0,1)); 
 		normal = Direction(1,0,0);
-		std::cout << "No intersection!" << endl;
+		std::cout << "No intersection!" << std::endl;
 	}
 
 
 	// LOCAL LIGHTING
-	double reflectedLight = double(glm::dot(normal, -glm::normalize(r.getDirection())));
+	float reflectedLight = double(glm::dot(normal, -glm::normalize(r.getDirection())));
 
 	// Local light contribution if: diffuse surface, lightsource or max_reflections reached
 	if(intersectedSurface.type == diffuse){
-		r.setColor(intersectedSurface.getSurfaceColor() * reflectedLight)
+		r.setColor(intersectedSurface.getSurfaceColor() * reflectedLight);
 		return r.getColor();
 	}
-	else if (intersectedSurface.type == lightsource){
+	else if (intersectedSurface.type == lightSource){
 		r.setColor(ColorDbl{10.0, 10.0, 10.0});
-		std::cout << "Lightsource!" << endl;
+		std::cout << "Lightsource!" << std::endl;
 		return r.getColor;
 	}
 	else if (num_reflections >= MAX_REFLECTIONS){

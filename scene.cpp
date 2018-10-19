@@ -1,14 +1,14 @@
-#include "scene.h"
+#include "headers/scene.h"
 
-void createRoom() {
+void Scene::createRoom() {
 	//colors
-	ColorDbl white{ 1,1,1 };
-	ColorDbl red{ 1,0,0 }; 
-	ColorDbl yellow{ 1,1,0 }; 
-	ColorDbl cyan{ 0,1,1 }; 
-	ColorDbl blue{ 0,0,1 }; 
-	ColorDbl magenta{ 1,0,1 }; 
-	ColorDbl green{ 0,1,0 }; 
+	Surface white{ ColorDbl{1,1,1 }, diffuse };
+	Surface red{ ColorDbl{ 1,0,0 }, diffuse};
+	Surface yellow{ ColorDbl{ 1,1,0 }, diffuse};
+	Surface cyan{ ColorDbl{ 0,1,1 }, diffuse};
+	Surface blue{ ColorDbl{ 0,0,1 }, diffuse};
+	Surface magenta{ ColorDbl{ 1,0,1 }, diffuse};
+	Surface green{ ColorDbl{ 0,1,0 }, diffuse};
 
 	/* Top-view of room, vertex points and sides
 			  a
@@ -39,7 +39,7 @@ void createRoom() {
 
 	//Triangles
 	const int num_Triangles = 20;
-	Triangle triangles[num_Triangles] {
+	Triangle triangles[num_Triangles] = {
 
 	//Top
 		Triangle(aTop,bTop,cTop,white),
@@ -72,11 +72,11 @@ void createRoom() {
 		//FA
 		Triangle(aBot,aTop,fTop,yellow),
 		Triangle(aBot,fTop,fBot,yellow)
-	}
+	};
 	
 }
 
-void intersections() {
+void Scene::intersections(Ray& r) {
 
 
 }

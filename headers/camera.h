@@ -6,15 +6,16 @@
 #include "ray.h"
 #include "Definitions.h"
 #include <array>
+#include <fstream>
 
-class camera() {
+class Camera {
 
 	Vertex eye1 = Vertex(-1, 0, 0, 0);
 	Vertex eye2 = Vertex(-2, 0, 0, 0);
 	int whichEye = 1; //1 = eye1, 2 = eye2
 
-	const int CAMERA_VIEW = 800;
-	std::array<std::array<pixel, CAMERA_VIEW>, CAMERA_VIEW> pixels;
+	static const int CAMERA_VIEW = 800;
+	std::array<std::array<Pixel, CAMERA_VIEW>, CAMERA_VIEW> pixels;
 
 	ColorDbl castRay(Ray& r, int num_reflections, Scene& scene);
 
@@ -23,5 +24,6 @@ public:
 	void createImage();
 
 	const int MAX_REFLECTIONS = 10;
-}
+};
+
 #endif

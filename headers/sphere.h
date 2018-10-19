@@ -4,11 +4,10 @@
 #include "ray.h"
 #include "Definitions.h"
 #include "surface.h"
-#include "glm/glm.hpp"
+#include "../glm/glm/glm.hpp"
 
-//ADD SURFACE?
 
-class Sphere() {
+class Sphere {
 
 private:
 	float radius;
@@ -24,6 +23,6 @@ public:
 	bool rayIntersection(Ray& r);
 	glm::vec3 getNormal(Vertex c);
 
-}
+};
 
 #endif
