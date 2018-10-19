@@ -1,8 +1,8 @@
 #include "triangle.h"
 
 
-Triangle::Triangle(Vertex& a, Vertex& b, Vertex& c, ColorDbl& color)
-	: v0(a), v1(b), v2(c), triangleColor(color)
+Triangle::Triangle(Vertex& a, Vertex& b, Vertex& c, ColorDbl& color, Surface s)
+	: v0(a), v1(b), v2(c), triangleColor(color), triangleSurface(s)
 {
 	//Calculate the normal
 	Direction E1 = Direction(v1.x-v0.x, v1.y-v0.y, v1.z-v0.z); //create edge 1 
