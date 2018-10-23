@@ -78,5 +78,17 @@ void Scene::createRoom() {
 
 void Scene::intersections(Ray& r) {
 
+	for (int i = 0; i < spheres.size(); i++)
+		spheres[i].rayIntersection(r);
+
+	for (int i = 0; i < tetrahedrons.size(); i++)
+		tetrahedrons[i].rayIntersection(r);
+
+	for (int i = 0; i< T_SIZE; i++)  //for the walls
+	{
+		if (triangles[i].rayIntersection(r))
+			//already TRIANGLE if true
+			break; 
+	}
 
 }
