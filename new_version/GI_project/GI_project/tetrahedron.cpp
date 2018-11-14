@@ -1,0 +1,27 @@
+#include "headers/tetrahedron.h"
+#include <cmath>
+
+Tetrahedron::Tetrahedron(Vertex c, float h, Surface s)
+	: center(c), height(h), tetrahedronSurface(s)
+{
+	float S = height / sqrt(2 / 3);
+	float L = sqrt(S*S - height*height);
+
+	top = center + Vertex(0, 0, height*(3 / 4), 0);
+	bot1 = center + Vertex(L, 0, (-height / 4), 0);
+	bot2 = center + Vertex((-L / 2), (sqrt(3) / 2)*L, (-height / 4), 0);
+	bot3 = center + Vertex((-L / 2), (-sqrt(3) / 2)*L, (-height / 4),  0);
+
+	tetraTriangles[0] = Triangle(top, bot2, bot1, s);
+	tetraTriangles[1] = Triangle(top, bot3, bot2, s);
+	tetraTriangles[2] = Triangle(top, bot1, bot3, s);
+	tetraTriangles[3] = Triangle(bot1, bot2, bot3, s);
+}
+
+bool Tetrahedron::rayTetraIntersection(Ray &r) {
+
+	if (tetraTriangles[0].rayTriangleIntersection(r) || tetraTriangles[1].rayTriangleIntersection(r) || tetraTriangles[2].rayTriangleIntersection(r) || tetraTriangles[3].rayTriangleIntersection(r))
+		return true;
+	else
+		return false;
+}
