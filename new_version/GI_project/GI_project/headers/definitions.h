@@ -12,7 +12,7 @@ using Direction = glm::vec3;
 enum surfaceType {
 	diffuse,
 	specular,
-	lightSource
+	lightsource
 
 };
 
