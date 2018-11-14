@@ -3,17 +3,17 @@
 
 #include "triangle.h"
 #include "definitions.h"
-//#include "sphere.h"
-//#include "lightsource.h"
-//#include "tetrahedron.h"
+#include "sphere.h"
+#include "lightsource.h"
+#include "tetrahedron.h"
 #include <vector>
 
 class Scene {
 private:
-	//std::vector<Sphere> spheres;
+	std::vector<Sphere> spheres;
 	std::vector<Triangle> triangles;
-	//std::vector<Tetrahedron> tetrahedrons;
-	//std::vector<Lightsource> lightsources;
+	std::vector<Tetrahedron> tetrahedrons;
+	std::vector<Lightsource> lightsources;
 
 public:
 	Scene() {
@@ -23,7 +23,7 @@ public:
 	~Scene() = default;
 	void createRoom();
 	void intersections(Ray& r);
-/*
+
 	void addSphere(const Sphere &s) {
 		spheres.push_back(s);
 		std::cout << "Sphere added" << std::endl;
@@ -38,7 +38,7 @@ public:
 		lightsources.push_back(l);
 		std::cout << "Lightsource added" << std::endl;
 	}
-*/
+
 };
 
 
