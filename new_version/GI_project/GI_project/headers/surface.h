@@ -15,7 +15,7 @@ public:
 	~Surface() = default;
 	Surface(const ColorDbl &color, const surfaceType st);
 	ColorDbl getSurfaceColor();
-	Ray reflectType(const Ray& r, const glm::vec3 &position, const Direction &normal);
+	Ray reflectType(Ray& r, const glm::vec3 &position, const Direction &normal);
 
 	surfaceType type;
 };

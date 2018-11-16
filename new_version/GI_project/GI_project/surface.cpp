@@ -27,13 +27,19 @@ ColorDbl Surface::getSurfaceColor() {
 
 //ADD BRDF
 
-Ray Surface::reflectType( const Ray& r, const glm::vec3 &position, const Direction &normal ) {
+Ray Surface::reflectType( Ray& r, const glm::vec3 &position, const Direction &normal ) {
 
 	if (type == diffuse) {
 		//hemisphere shit
 	}
 	else if (type == specular) {
-		//glm::reflect shit
+		glm::vec3 newDirection= glm::reflect(r.getDirection(), normal);
+
+		Vertex newEnd = Vertex(newDirection.x + r.getStart().x, newDirection.y + r.getStart().y, newDirection.z + r.getStart().z, 0);
+
+		Ray newRay = Ray(r.getStart(), newEnd, getSurfaceColor()); //color may needs to be changed
+
+		return newRay;
 	}
 	else {
 		//Invalid reflection
