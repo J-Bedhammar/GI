@@ -26,3 +26,17 @@ ColorDbl Surface::getSurfaceColor() {
 }
 
 //ADD BRDF
+
+Ray Surface::reflectType( const Ray& r, const glm::vec3 &position, const Direction &normal ) {
+
+	if (type == diffuse) {
+		//hemisphere shit
+	}
+	else if (type == specular) {
+		//glm::reflect shit
+	}
+	else {
+		//Invalid reflection
+	}
+
+}
