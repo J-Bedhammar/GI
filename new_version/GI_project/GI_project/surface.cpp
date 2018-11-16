@@ -1,5 +1,5 @@
 #include "headers/surface.h"
-#define M_PI 3.14159f
+
 //ADD BRDF, hemisphere shit
 
 Surface::Surface() {
@@ -25,12 +25,11 @@ ColorDbl Surface::getSurfaceColor() {
 	}
 }
 
-//ADD BRDF
-
+//BRDF
 Ray Surface::reflectType( Ray& r, const glm::vec3 &position, const Direction &normal ) {
 
 	if (type == diffuse) {
-		//hemisphere shit
+		return r.randHemisphere(position, normal, getSurfaceColor());
 	}
 	else if (type == specular) {
 		glm::vec3 newDirection= glm::reflect(r.getDirection(), normal);
@@ -43,6 +42,6 @@ Ray Surface::reflectType( Ray& r, const glm::vec3 &position, const Direction &no
 	}
 	else {
 		//Invalid reflection
+		std::cout << "Invalid reflection" << std::endl;
 	}
-
 }
