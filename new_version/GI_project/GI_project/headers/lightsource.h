@@ -15,6 +15,7 @@ public:
 
 	Lightsource(Triangle t);
 	bool rayLightIntersection(Ray &r);
+	Triangle getLightTriangle() { return lightTriangle; };
 };
 
 

@@ -60,3 +60,11 @@ bool Sphere::raySphereIntersection(Ray &r) {
 
 	return false; // no intersection
 }
+
+
+glm::vec3 Sphere::getNormal(Vertex p) {
+
+	glm::vec3 normal = glm::normalize(p - center);
+
+	return normal;
+}

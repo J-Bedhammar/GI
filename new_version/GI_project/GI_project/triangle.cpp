@@ -1,7 +1,7 @@
 #include "headers/triangle.h"
 
 Triangle::Triangle() {
-	std::cout << "Created fake triangle" << std::endl;
+	//std::cout << "Created fake triangle" << std::endl;
 }
 
 
@@ -16,7 +16,7 @@ Triangle::Triangle(Vertex &a, Vertex &b, Vertex &c, Surface s)
 																	 //Crossproduct of the edges gives the normal
 	triangleNormal = glm::normalize(glm::cross(E1, E2));
 
-	std::cout << "Created triangle with the normal: (" << triangleNormal.x << ", " << triangleNormal.y << ", " << triangleNormal.z << ")" << std::endl;
+	//std::cout << "Created triangle with the normal: (" << triangleNormal.x << ", " << triangleNormal.y << ", " << triangleNormal.z << ")" << std::endl;
 };
 
 
@@ -84,7 +84,7 @@ bool Triangle::rayTriangleIntersection(Ray &r) {
 		//Set ray color to triangle color but also dependent on normal
 		r.setColor(triangleSurface.getSurfaceColor());// *double(glm::dot(triangleNormal, glm::normalize(-D)))); //COULD BE DONE OUTSIDE FUNCTION
 
-		std::cout << "Hit triangle! Color of triangle: (" << triangleSurface.getSurfaceColor().x << ", " << triangleSurface.getSurfaceColor().y << ", " << triangleSurface.getSurfaceColor().z << ")" << std::endl;
+		//std::cout << "Hit triangle! Color of triangle: (" << triangleSurface.getSurfaceColor().x << ", " << triangleSurface.getSurfaceColor().y << ", " << triangleSurface.getSurfaceColor().z << ")" << std::endl;
 
 		return true;
 	}
@@ -93,3 +93,26 @@ bool Triangle::rayTriangleIntersection(Ray &r) {
 
 //Reference for Möller Trumbore
 // See https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/moller-trumbore-ray-triangle-intersection
+
+
+Vertex Triangle::getRandPoint() {
+	
+	std::default_random_engine generator;
+	std::uniform_real_distribution<float> distribution1(0.0, 1.0);
+	float randNum1 = distribution1(generator);
+	std::uniform_real_distribution<float> distribution2(0.0, (0.99 - randNum1));
+	float randNum2 = distribution2(generator);
+
+	if (randNum1 + randNum2 >= 1)
+		std::cout << "Error! Random lightpoint outside light triangle!" << std::endl;
+
+	//vertex 1 (2.75,0) vertex 2 ( 7.25,2)
+	Vertex V0 = v0;
+	Vertex V1 = v1;
+	Vertex V2 = v2;
+	Vertex V;
+
+	V = V0 + (V1 - V0)* randNum1 + (V2 - V0)*randNum2;
+
+	return V;
+}

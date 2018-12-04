@@ -15,6 +15,8 @@ private:
 	std::vector<Tetrahedron> tetrahedrons;
 	std::vector<Lightsource> lightsources;
 
+	const int nrShadowRays = 4;
+
 public:
 	Scene() {
 		std::cout << "Created room" << std::endl;
@@ -38,6 +40,8 @@ public:
 		lightsources.push_back(l);
 		std::cout << "Lightsource added" << std::endl;
 	}
+
+	ColorDbl sendShadowRays(Vertex &surfacePoint, Direction normal);
 
 };
 

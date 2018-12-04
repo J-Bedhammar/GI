@@ -21,7 +21,7 @@ public:
 	float getRadius() { return radius; }
 	Surface getSurface() { return sphereSurface; }
 	bool raySphereIntersection(Ray& r);
-	glm::vec3 getNormal(Vertex c);
+	glm::vec3 getNormal(Vertex p);
 
 };
 

@@ -88,3 +88,45 @@ void Scene::intersections(Ray& r) {
 	}
 
 }
+
+ColorDbl Scene::sendShadowRays(Vertex &surfacePoint, Direction normal) {
+
+	ColorDbl black = ColorDbl(0.0, 0.0, 0.0);
+	ColorDbl lightcontribution = black;
+
+	//nr of shadow rays 
+	for (int i = 0; i < nrShadowRays; i++) {
+	
+		//get random point on lightsource
+		Vertex randPoint = lightsources.front().getLightTriangle().getRandPoint();
+
+		//shoot ray towards light
+		Ray toLight = Ray(surfacePoint, randPoint, black);
+
+		intersections(toLight);
+
+		//hits a sphere
+		if (toLight.getSphere()) {
+			//make the surfacecolor darker alt do not change the color
+			continue;
+		}
+		if (toLight.getTriangle()) {
+			if (toLight.getTriangle()->getSurface().type == lightsource) {
+
+				std::cout << "shadowray hit lightsource" << std::endl;
+
+				Direction lightsourceDir = glm::vec3(randPoint.x - surfacePoint.x, randPoint.y - surfacePoint.y, randPoint.z - surfacePoint.z);
+				float distancetoLight = glm::distance(surfacePoint, randPoint);
+				float dotProduct = glm::dot(normal, lightsourceDir);
+
+				//tweak to change illumination in scene
+				float intensity = dotProduct / (distancetoLight);
+				float emittance = 20.0;
+				lightcontribution += toLight.getTriangle()->getSurface().getSurfaceColor() * intensity * emittance;
+			}
+			continue;
+		}
+	}
+
+	return lightcontribution;
+}

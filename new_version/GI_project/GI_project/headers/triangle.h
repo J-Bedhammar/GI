@@ -20,6 +20,8 @@ public:
 	Surface getSurface() { return triangleSurface; }
 	bool rayTriangleIntersection(Ray &r);
 
+	Vertex getRandPoint();
+
 };
 
 #endif

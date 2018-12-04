@@ -3,7 +3,7 @@
 //ADD BRDF, hemisphere shit
 
 Surface::Surface() {
-	std::cout << "Fake surface!" << std::endl;
+	//std::cout << "Fake surface!" << std::endl;
 }
 
 

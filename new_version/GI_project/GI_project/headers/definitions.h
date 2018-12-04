@@ -5,6 +5,7 @@
 #include "glm.hpp"
 #include <iostream>
 #include <cmath>
+#define GLM_ENABLE_EXPERIMENTAL
 
 using Vertex = glm::vec4;
 using ColorDbl = glm::vec3;

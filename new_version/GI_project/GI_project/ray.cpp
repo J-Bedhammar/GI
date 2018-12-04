@@ -22,7 +22,7 @@ void Ray::sphereHit(Sphere* s, Vertex& ip) {
 Ray Ray::randHemisphere(glm::vec3 position, Direction normal, ColorDbl clr) {
 	//randfunctions rand1 rand2
 	std::default_random_engine generator;
-	std::uniform_int_distribution<float> distribution(0, 1);
+	std::uniform_real_distribution<float> distribution(0.0, 1.0);
 	float randNum1 = distribution(generator);
 	float randNum2 = distribution(generator);
 
@@ -45,11 +45,5 @@ Ray Ray::randHemisphere(glm::vec3 position, Direction normal, ColorDbl clr) {
 
 
 	return Ray(newStart, newEnd, clr);
-	
-
-	//rotate the ray
-
-	//return rotated ray
-
 
 };

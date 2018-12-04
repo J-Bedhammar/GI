@@ -89,11 +89,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\Jennifer\Documents\GitHub\GI\GI\new_version\glm\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\TNCG15\GI\new_version\glm\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <StackReserveSize>20000</StackReserveSize>
+      <StackCommitSize>20000</StackCommitSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -147,16 +149,26 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="headers\camera.h" />
     <ClInclude Include="headers\definitions.h" />
+    <ClInclude Include="headers\lightsource.h" />
+    <ClInclude Include="headers\pixel.h" />
     <ClInclude Include="headers\ray.h" />
     <ClInclude Include="headers\scene.h" />
+    <ClInclude Include="headers\sphere.h" />
     <ClInclude Include="headers\surface.h" />
+    <ClInclude Include="headers\tetrahedron.h" />
     <ClInclude Include="headers\triangle.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="camera.cpp" />
+    <ClCompile Include="lightsource.cpp" />
+    <ClCompile Include="pixel.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="ray.cpp" />
+    <ClCompile Include="sphere.cpp" />
     <ClCompile Include="surface.cpp" />
+    <ClCompile Include="tetrahedron.cpp" />
     <ClCompile Include="triangle.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
