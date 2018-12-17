@@ -12,21 +12,31 @@
 class Camera {
 
 private:
-	Vertex eye1 = Vertex(-1, 0, 0, 0);
+	Vertex eye1 = Vertex(0, 0, 0, 0);
 	Vertex eye2 = Vertex(-2, 0, 0, 0);
+	glm::vec4 cameraplane[4];
+
+	glm::vec4 pixelplane[4]; 
+	glm::vec4 planeWidthAxis;
+	glm::vec4 planeHeigthAxis;
+
+	float pixelStep;
+	glm::vec4 wAxis;
+	glm::vec4 hAxis;
 	int whichEye = 1;
 
-	static const int CAMERA_VIEW = 50;
+	static const int CAMERA_VIEW = 800;
 	//std::array<std::array<Pixel, CAMERA_VIEW>, CAMERA_VIEW> pixels;
 	Pixel *pixels;
 
-	ColorDbl castRay(Ray& r, int num_reflections, Scene& scene);
+	ColorDbl castRay(Ray r, int num_reflections, Scene& scene);
 
 public:
 	Camera(int i);
 	~Camera() = default;
 	void render(Scene& scene);
 	void createImage();
+	Ray* pixeltoray2(int w, int h);
 
 	const int MAX_REFLECTIONS = 5;
 	float maxColor = 0.0;

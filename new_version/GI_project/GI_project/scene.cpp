@@ -2,13 +2,13 @@
 
 void Scene::createRoom() {
 	//colors
-	Surface white{ ColorDbl{ 1,1,1 }, diffuse };
-	Surface red{ ColorDbl{ 1,0,0 }, diffuse };
-	Surface yellow{ ColorDbl{ 1,1,0 }, diffuse };
-	Surface cyan{ ColorDbl{ 0,1,1 }, diffuse };
-	Surface blue{ ColorDbl{ 0,0,1 }, diffuse };
-	Surface magenta{ ColorDbl{ 1,0,1 }, diffuse };
-	Surface green{ ColorDbl{ 0,1,0 }, diffuse };
+	Surface white{ ColorDbl{ 1,1,1 }, "diffuse" };
+	Surface red{ ColorDbl{ 1,0,0 }, "diffuse" };
+	Surface yellow{ ColorDbl{ 1,1,0 }, "diffuse" };
+	Surface cyan{ ColorDbl{ 0,1,1 }, "diffuse" };
+	Surface blue{ ColorDbl{ 0,0,1 }, "diffuse" };
+	Surface magenta{ ColorDbl{ 1,0,1 }, "diffuse" };
+	Surface green{ ColorDbl{ 0,1,0 }, "diffuse" };
 
 	/* Top-view of room, vertex points and sides
 			  a
@@ -74,22 +74,29 @@ void Scene::createRoom() {
 
 void Scene::intersections(Ray& r) {
 
-	for (int i = 0; i < spheres.size(); i++)
+	for (int i = 0; i < spheres.size(); i++) {
 		spheres[i].raySphereIntersection(r);
+	}
 	
-	for (int i = 0; i < tetrahedrons.size(); i++)
-		tetrahedrons[i].rayTetraIntersection(r);
+	for (int j = 0; j < tetrahedrons.size(); j++) {
+		tetrahedrons[j].rayTetraIntersection(r);
+	}
 	
-	for (int i = 0; i < triangles.size(); i++)  //for the walls
-	{
-		if (triangles[i].rayTriangleIntersection(r))
+	for (int k = 0; k < triangles.size(); k++)  //for the walls
+	{	
+		if (triangles[k].rayTriangleIntersection(r)) {
 			//already TRIANGLE if true
 			break;
+		}
+	}
+
+	for (int l = 0; l < lightsources.size(); l++) {
+		lightsources[l].rayLightIntersection(r);
 	}
 
 }
 
-ColorDbl Scene::sendShadowRays(Vertex &surfacePoint, Direction normal) {
+ColorDbl Scene::sendShadowRays(Vertex &surfacePoint, ColorDbl surfaceColor, Direction normal) {
 
 	ColorDbl black = ColorDbl(0.0, 0.0, 0.0);
 	ColorDbl lightcontribution = black;
@@ -105,15 +112,19 @@ ColorDbl Scene::sendShadowRays(Vertex &surfacePoint, Direction normal) {
 
 		intersections(toLight);
 
+
 		//hits a sphere
 		if (toLight.getSphere()) {
 			//make the surfacecolor darker alt do not change the color
 			continue;
 		}
 		if (toLight.getTriangle()) {
-			if (toLight.getTriangle()->getSurface().type == lightsource) {
+			if (toLight.getTriangle()->getSurface().type != "lightsource") {
+				continue;
+			}
+			else{
 
-				std::cout << "shadowray hit lightsource" << std::endl;
+				//std::cout << "Shadowray hit lightsource" << std::endl;
 
 				Direction lightsourceDir = glm::vec3(randPoint.x - surfacePoint.x, randPoint.y - surfacePoint.y, randPoint.z - surfacePoint.z);
 				float distancetoLight = glm::distance(surfacePoint, randPoint);
@@ -122,9 +133,8 @@ ColorDbl Scene::sendShadowRays(Vertex &surfacePoint, Direction normal) {
 				//tweak to change illumination in scene
 				float intensity = dotProduct / (distancetoLight);
 				float emittance = 20.0;
-				lightcontribution += toLight.getTriangle()->getSurface().getSurfaceColor() * intensity * emittance;
+				lightcontribution += surfaceColor * intensity * emittance;
 			}
-			continue;
 		}
 	}
 

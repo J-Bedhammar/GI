@@ -6,26 +6,26 @@
 int main(){
 	std::cout << "RUN PROGRAM: \n" << std::endl;
 
-	int cameraPos = 1;
+	int cameraPos = 2;
 
 	Scene scene;
 	Camera camera(cameraPos);
 
 	//Create tetrahedron
 	Vertex tetraCenter = Vertex(8.0f, -3.0f, 0.0f, 0.0f);
-	Surface tetraSur = Surface(ColorDbl(0.0, 1.0, 0.0), diffuse);
-	Tetrahedron tetra = Tetrahedron(tetraCenter, 1, tetraSur);
+	Surface tetraSur = Surface(ColorDbl(0.0, 1.0, 0.0), "diffuse");
+	Tetrahedron tetra = Tetrahedron(tetraCenter, 1.0, tetraSur);
 	
 	//Create sphere
 	Vertex sphereCenter = Vertex(6.5f, 2.0f, 0.0f, 0.0f);
-	Surface sphereSur = Surface(ColorDbl(1.0, 0.0, 0.0), specular);
+	Surface sphereSur = Surface(ColorDbl(1.0, 0.0, 0.0), "specular");
 	Sphere sphere = Sphere(1.0f, sphereCenter, sphereSur);
 	
 	//Create lightsource
 	Vertex vl0 = Vertex(2.75f, 0.0f, 4.9f, 0.0f);
 	Vertex vl1 = Vertex(7.25f, 2.0f, 4.9f, 0.0f);
-	Vertex vl2 = Vertex(7.25f, -2.0f, 4.9, 0.0f);
-	Surface lightSur = Surface(ColorDbl(1.0, 1.0, 1.0), lightsource);
+	Vertex vl2 = Vertex(7.25f, -2.0f, 4.9f, 0.0f);
+	Surface lightSur = Surface(ColorDbl(1.0, 1.0, 1.0), "lightsource");
 	Triangle lightTriangle = Triangle(vl0, vl1, vl2, lightSur);
 	Lightsource light = Lightsource(lightTriangle);
 

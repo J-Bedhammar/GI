@@ -13,7 +13,7 @@ Triangle::Triangle(Vertex &a, Vertex &b, Vertex &c, Surface s)
 	Direction E1 = Direction(v1.x - v0.x, v1.y - v0.y, v1.z - v0.z); //create edge 1 
 	Direction E2 = Direction(v2.x - v0.x, v2.y - v0.y, v2.z - v0.z); //create edge 2
 
-																	 //Crossproduct of the edges gives the normal
+	//Crossproduct of the edges gives the normal
 	triangleNormal = glm::normalize(glm::cross(E1, E2));
 
 	//std::cout << "Created triangle with the normal: (" << triangleNormal.x << ", " << triangleNormal.y << ", " << triangleNormal.z << ")" << std::endl;
@@ -27,6 +27,7 @@ bool Triangle::rayTriangleIntersection(Ray &r) {
 	//Get start and endpoints of the ray
 	Vertex ps = r.getStart();
 	Vertex pe = r.getEnd();
+	
 
 	//Create the variables for Möller Trumbore
 	glm::vec3 T = ps - v0;			//Vector between Vertex v0 and the ray startpoint
@@ -35,6 +36,7 @@ bool Triangle::rayTriangleIntersection(Ray &r) {
 	glm::vec3 D = pe - ps;			//Direction rayvector from start-end
 	glm::vec3 P = glm::cross(D, E2);
 	glm::vec3 Q = glm::cross(T, E1);
+
 
 	//Calculate the determinant
 	//The determinant will determine if the ray hits/misses the triangle
@@ -68,16 +70,15 @@ bool Triangle::rayTriangleIntersection(Ray &r) {
 	//compute t
 	float t = glm::dot(Q, E2) * invDetA;
 
-
 	//Check if t valid. If behind eye or if this intersection is behind "another" triangle
 	if (t < 0.0f || t > 1.0f)
 		return false;
 
 	else {
-		//We intersect the triangle with our ray x(t) = ps + t(pe-ps)
-		Direction hitDir = Direction(ps.x, ps.y, ps.z) + t*D;
+		//We intersect the triangle with our ray x(t) = ps + t(pe-ps)	
+		Direction hitDir = Direction(ps.x, ps.y, ps.z) + t*D;		
 		Vertex intersectionPoint = Vertex(float(hitDir.x), float(hitDir.y), float(hitDir.z), 1.0f);
-
+		
 		//Change endpoint of our ray to the intersection point
 		r.triangleHit(this, intersectionPoint);
 
@@ -90,9 +91,6 @@ bool Triangle::rayTriangleIntersection(Ray &r) {
 	}
 
 }
-
-//Reference for Möller Trumbore
-// See https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/moller-trumbore-ray-triangle-intersection
 
 
 Vertex Triangle::getRandPoint() {
@@ -112,7 +110,13 @@ Vertex Triangle::getRandPoint() {
 	Vertex V2 = v2;
 	Vertex V;
 
-	V = V0 + (V1 - V0)* randNum1 + (V2 - V0)*randNum2;
+	V = V0 + (V1 - V0)* randNum1 + (V2 - V0)*randNum2; //+ glm::vec4(0.0, 0.0, 1.0, 0.0);
 
 	return V;
 }
+
+
+
+
+//Reference for Möller Trumbore
+// See https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/moller-trumbore-ray-triangle-intersection

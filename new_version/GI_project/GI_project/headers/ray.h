@@ -23,9 +23,9 @@ private:
 public:
 	~Ray() = default;
 	Ray() {};
-	Ray(Vertex &start, Vertex &end, ColorDbl c);
+	Ray(Vertex start, Vertex end, ColorDbl c);
 
-	void triangleHit(Triangle* t, Vertex &ip);
+	void triangleHit(Triangle* t, Vertex ip);
 	void sphereHit(Sphere* s, Vertex &ip);
 
 	Vertex getStart() { return startPoint; }
@@ -36,7 +36,7 @@ public:
 
 	Triangle* getTriangle() { return collisionTriangle; }
 	Sphere* getSphere() { return collisionSphere; }
-	Direction getDirection() { return glm::normalize(Direction(endPoint.x - startPoint.x, endPoint.y - startPoint.y, endPoint.z - startPoint.z)); }
+	Direction getDirection();
 
 	Ray randHemisphere(glm::vec3 position, Direction normal, ColorDbl clr);
 

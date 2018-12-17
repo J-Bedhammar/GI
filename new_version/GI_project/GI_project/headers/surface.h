@@ -13,12 +13,13 @@ private:
 public:
 	Surface();
 	~Surface() = default;
-	Surface(const ColorDbl &color, const surfaceType st);
+	Surface(const ColorDbl &color, const std::string st);
 	ColorDbl getSurfaceColor();
 	Ray reflectType(Ray& r, const glm::vec3 &position, const Direction &normal);
 	float getReflection() { return reflection; };
 
-	surfaceType type;
+	std::string type = "diffuse";
+
 };
 
 #endif

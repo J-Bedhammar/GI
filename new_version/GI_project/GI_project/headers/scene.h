@@ -41,7 +41,7 @@ public:
 		std::cout << "Lightsource added" << std::endl;
 	}
 
-	ColorDbl sendShadowRays(Vertex &surfacePoint, Direction normal);
+	ColorDbl sendShadowRays(Vertex &surfacePoint, ColorDbl surfaceColor, Direction normal);
 
 };
 
