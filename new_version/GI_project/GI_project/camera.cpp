@@ -42,12 +42,12 @@ void Camera::render(Scene& scene) {
 		std::cout << percent << "%" << std::endl;
 
 		for (int c = 0; c < CAMERA_VIEW; c++) {
-			float fov = M_PI / 1;
+			float fov = M_PI / 2;
 
-			//float Py = tan(fov/2) * (2 * (r + 0.5) / CAMERA_VIEW - 1);
-			//float Pz = tan(fov/2) * (1 - 2 * (c + 0.5) / CAMERA_VIEW);
+			float Py = tan(fov / 2) * (1 - 2 * (c + 0.5) / CAMERA_VIEW);
+			float Pz = tan(fov / 2) * (2 * (r + 0.5) / CAMERA_VIEW - 1);
 
-			Vertex xp = Vertex(0.0f, r*delta - 0.99875f, c*delta - 0.99875f, 0.0f); //Use wAxis and hAxis
+			//Vertex xp = Vertex(0.0f, r*delta - 0.99875f, c*delta - 0.99875f, 0.0f); //Use wAxis and hAxis
 			Vertex ps;
 
 			// choose eye
@@ -57,16 +57,17 @@ void Camera::render(Scene& scene) {
 				ps = eye2;
 
 			//end point
-			glm::vec4 D = glm::normalize(xp - ps) *100.0f;	
-			Vertex pe = D + ps;
-			//Vertex pe = glm::vec4(1.0f, Py, Pz, 1.0f) * 100.0f;
+			//glm::vec4 D = glm::normalize(xp - ps) *100.0f;	
+			//Vertex pe = D + ps;
+			Vertex pe = glm::vec4(1.0f, Py, -Pz, 1.0f) * 100.0f;
+			
 			// equation ray from eye to pixel(i,j), color: white
 			Ray ray = Ray(ps, pe, ColorDbl(1, 1, 1));
 
 			//Ray *ray = pixeltoray2(r, c);
 			//rayIntersection
 			//check if terminated
-			ColorDbl color = castRay(ray, 1, scene);
+			ColorDbl color = castRay(ray, 1, scene, percent);
 
 			//Print out color
 			//std::cout << "Color: (" << color.x << " , " << color.y << " , " << color.z << ")" << std::endl;
@@ -98,7 +99,7 @@ Ray* Camera::pixeltoray2(int w, int h) {
 
 }
 
-ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene) {
+ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) {
 
 	
 	ColorDbl pixelColor = ColorDbl(0.0, 0.0, 0.0);
@@ -116,7 +117,8 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene) {
 		//if triangle is a lightsource
 		if (r.getTriangle()->getSurface().type == "lightsource") {
 			//getColor? just nu blir det (0,0,0) (svart) det ska inte bli vitt?
-			return intersectedSurface.getSurfaceColor();
+			ColorDbl lightColor = ColorDbl(10.0, 10.0, 10.00);
+			return lightColor; //intersectedSurface.getSurfaceColor();
 		}
 
 
@@ -129,7 +131,11 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene) {
 		double theta = glm::angle(reflectedRay.getDirection(), normal);
 		ColorDbl emittedColor = intersectedSurface.getSurfaceColor();
 		emittedColor = ColorDbl(emittedColor.x*cos(theta), emittedColor.y*cos(theta), emittedColor.z*cos(theta));
-		std::cout << emittedColor.x << " " << emittedColor.y << " " << emittedColor.z << std::endl;
+
+		/*if (percent % 20 == 0)
+			std::cout << emittedColor.x << " " << emittedColor.y << " " << emittedColor.z << " - " << percent << std::endl;
+		*/
+		
 
 		//shadowrays
 		ColorDbl illumination = scene.sendShadowRays(r.getEnd(), intersectedSurface.getSurfaceColor(), normal);
@@ -142,7 +148,7 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene) {
 			int nextReflection = (intersectedSurface.type == "specular") ? num_reflections : (num_reflections + 1);
 			//sends out the reflected ray, multiplied with the reflectioncoefficant 
 
-			pixelColor += castRay(reflectedRay, nextReflection, scene) * intersectedSurface.getReflection();
+			pixelColor += castRay(reflectedRay, nextReflection, scene, percent) * intersectedSurface.getReflection();
 		}
 
 
@@ -170,7 +176,7 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene) {
 		if (num_reflections < MAX_REFLECTIONS) {
 			int nextReflection = (intersectedSurface.type == "specular") ? num_reflections : num_reflections + 1;
 			//sends out the reflected ray, multiplied with the reflectioncoefficant 
-			pixelColor += castRay(reflectedRay, nextReflection, scene) * intersectedSurface.getReflection();
+			pixelColor += castRay(reflectedRay, nextReflection, scene, percent) * intersectedSurface.getReflection();
 		}
 	}
 	else { //No intersection
@@ -189,21 +195,28 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene) {
 
 void Camera::createImage() {
 	
+	double gamma = 1.5;
+
 	//FILE *file = fopen("RayTraceOutput.ppm", "wb"); // not secure
 	std::string name = "RayTraceOutput.ppm";
 	FILE *file;
 	errno_t err = fopen_s(&file, name.c_str(), "wb");
+	(void)fprintf(file, "P3\n%d %d\n255\n", CAMERA_VIEW, CAMERA_VIEW);
 	for (int r = 0; r < CAMERA_VIEW; r++) {
-		(void)fprintf(file, "P3\n%d %d\n255\n", CAMERA_VIEW, CAMERA_VIEW);
 		for (int c = 0; c < CAMERA_VIEW; c++) {
 			ColorDbl color = pixels[c + r*CAMERA_VIEW].getColor();
+
+			float Cx = pow(color.x, gamma);
+			float Cy = pow(color.y, gamma);
+			float Cz = pow(color.z, gamma);
+
 			(void)fprintf(file, "%d %d %d ",
 				// /maxColor
-				(int)(255 * (color.x / maxColor)),
-				(int)(255 * (color.y / maxColor)),
-				(int)(255 * (color.z / maxColor))
+				(int)(255 * (Cx / maxColor)),
+				(int)(255 * (Cy / maxColor)),
+				(int)(255 * (Cz / maxColor))
 			);
-			std::cout << color.x << " " << color.y << " " << color.z << std::endl;
+			//std::cout << color.x << " " << color.y << " " << color.z << std::endl;
 		}
 	}
 	fclose(file);

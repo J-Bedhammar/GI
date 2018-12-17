@@ -25,11 +25,11 @@ private:
 	glm::vec4 hAxis;
 	int whichEye = 1;
 
-	static const int CAMERA_VIEW = 800;
+	static const int CAMERA_VIEW = 100;
 	//std::array<std::array<Pixel, CAMERA_VIEW>, CAMERA_VIEW> pixels;
 	Pixel *pixels;
 
-	ColorDbl castRay(Ray r, int num_reflections, Scene& scene);
+	ColorDbl castRay(Ray r, int num_reflections, Scene& scene, int percent);
 
 public:
 	Camera(int i);

@@ -13,10 +13,10 @@ Tetrahedron::Tetrahedron(Vertex c, float h, Surface s)
 	bot2 = center + Vertex((-L / 2.0), (sqrt(3.0) / 2.0)*L, (-height / 4.0), 0.0);
 	bot3 = center + Vertex((-L / 2.0), (-sqrt(3.0) / 2.0)*L, (-height / 4.0),  0.0);
 
-	tetraTriangles[0] = Triangle(top, bot2, bot1, s);
-	tetraTriangles[1] = Triangle(top, bot3, bot2, s);
-	tetraTriangles[2] = Triangle(top, bot1, bot3, s);
-	tetraTriangles[3] = Triangle(bot1, bot2, bot3, s);
+	tetraTriangles[0] = Triangle(top, bot1, bot2, s);
+	tetraTriangles[1] = Triangle(top, bot2, bot3, s);
+	tetraTriangles[2] = Triangle(top, bot3, bot1, s);
+	tetraTriangles[3] = Triangle(bot1, bot3, bot2, s);
 }
 
 bool Tetrahedron::rayTetraIntersection(Ray &r) {
