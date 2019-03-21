@@ -25,7 +25,7 @@ private:
 	glm::vec4 hAxis;
 	int whichEye = 1;
 
-	static const int CAMERA_VIEW = 100;
+	static const int CAMERA_VIEW = 200;
 	//std::array<std::array<Pixel, CAMERA_VIEW>, CAMERA_VIEW> pixels;
 	Pixel *pixels;
 
@@ -38,7 +38,7 @@ public:
 	void createImage();
 	Ray* pixeltoray2(int w, int h);
 
-	const int MAX_REFLECTIONS = 5;
+	const int MAX_REFLECTIONS = 10;
 	float maxColor = 0.0;
 };
 

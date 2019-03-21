@@ -6,7 +6,7 @@
 int main(){
 	std::cout << "RUN PROGRAM: \n" << std::endl;
 
-	int cameraPos = 2;
+	int cameraPos = 1;
 
 	Scene scene;
 	Camera camera(cameraPos);
