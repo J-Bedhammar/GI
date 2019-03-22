@@ -103,7 +103,6 @@ ColorDbl Scene::sendShadowRays(Vertex &surfacePoint, ColorDbl surfaceColor, Dire
 
 	//nr of shadow rays 
 	for (int i = 0; i < nrShadowRays; i++) {
-	
 		//get random point on lightsource
 		Vertex randPoint = lightsources.front().getLightTriangle().getRandPoint();
 
@@ -112,10 +111,10 @@ ColorDbl Scene::sendShadowRays(Vertex &surfacePoint, ColorDbl surfaceColor, Dire
 
 		intersections(toLight);
 
-
 		//hits a sphere
 		if (toLight.getSphere()) {
 			//make the surfacecolor darker alt do not change the color
+			//std::cout << "Hit sphere" << std::endl;
 			continue;
 		}
 		if (toLight.getTriangle()) {
@@ -123,17 +122,18 @@ ColorDbl Scene::sendShadowRays(Vertex &surfacePoint, ColorDbl surfaceColor, Dire
 				continue;
 			}
 			else{
-
-				//std::cout << "Shadowray hit lightsource" << std::endl;
+				//std::cout << surfacePoint.x << "," << surfacePoint.y << "," << surfacePoint.z << std::endl;
+				//std::cout << "(" << surfaceColor.x << "," << surfaceColor.y << "," << surfaceColor.z << ")" << std::endl;
 
 				Direction lightsourceDir = glm::vec3(randPoint.x - surfacePoint.x, randPoint.y - surfacePoint.y, randPoint.z - surfacePoint.z);
 				float distancetoLight = glm::distance(surfacePoint, randPoint);
-				float dotProduct = glm::dot(normal, lightsourceDir);
+				float dotProduct = glm::dot(normal, lightsourceDir); // *glm::clamp((double)glm::dot(toLight.getTriangle()->getNormal(), -lightsourceDir), 0.0, 1.0);
 
 				//tweak to change illumination in scene
-				float intensity = dotProduct / (distancetoLight);
+				float intensity = dotProduct / pow(distancetoLight,2);
 				float emittance = 20.0;
 				lightcontribution += surfaceColor * intensity * emittance;
+				//std::cout << lightcontribution.x << ", " << lightcontribution.y << ", " << lightcontribution.z << std::endl;
 			}
 		}
 	}

@@ -42,7 +42,7 @@ bool Sphere::raySphereIntersection(Ray &r) {
 		//we intersect the spher at point x = 0 + dl;
 		Vertex intersectionPoint = Vertex(o.x + d1*l.x, o.y + d1*l.y, o.z + d1*l.z, 1.0f);
 		
-		//Change endpoint of our ray to the  intersection point
+		//Change endpoint of our ray to the intersection point
 		r.sphereHit(this, intersectionPoint);
 
 		return true;

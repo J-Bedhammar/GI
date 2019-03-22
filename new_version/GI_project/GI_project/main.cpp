@@ -12,12 +12,12 @@ int main(){
 	Camera camera(cameraPos);
 
 	//Create tetrahedron
-	Vertex tetraCenter = Vertex(8.0f, -3.0f, 0.0f, 0.0f);
+	Vertex tetraCenter = Vertex(8.0f, -3.0f, -2.0f, 0.0f);
 	Surface tetraSur = Surface(ColorDbl(0.0, 1.0, 0.0), "diffuse");
 	Tetrahedron tetra = Tetrahedron(tetraCenter, 1.0, tetraSur);
 	
 	//Create sphere
-	Vertex sphereCenter = Vertex(6.5f, 2.0f, 0.0f, 0.0f);
+	Vertex sphereCenter = Vertex(6.5f, 2.0f, -3.0f, 0.0f);
 	Surface sphereSur = Surface(ColorDbl(1.0, 0.0, 0.0), "specular");
 	Sphere sphere = Sphere(1.0f, sphereCenter, sphereSur);
 	

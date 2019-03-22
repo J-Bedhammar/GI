@@ -143,6 +143,7 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 		pixelColor += illumination; // remake illumiation
 		//std::cout << "illumination: (" << illumination.x << " , " << illumination.y << " , " << illumination.z << ")" << std::endl;
 
+
 		//add Russian roulette?
 		if (num_reflections < MAX_REFLECTIONS) {
 			int nextReflection = (intersectedSurface.type == "specular") ? num_reflections : (num_reflections + 1);
@@ -164,6 +165,9 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 
 		
 		double theta = glm::angle(reflectedRay.getDirection(), normal);
+
+		//std::cout << "theta:" << theta << std::endl;
+
 		ColorDbl emittedColor = intersectedSurface.getSurfaceColor();
 		emittedColor = ColorDbl(emittedColor.x*cos(theta), emittedColor.y*cos(theta), emittedColor.z*cos(theta));
 
@@ -172,6 +176,7 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 		ColorDbl illumination = scene.sendShadowRays(r.getEnd(), intersectedSurface.getSurfaceColor(), normal);
 		pixelColor += emittedColor;
 		pixelColor += illumination;
+	
 
 		if (num_reflections < MAX_REFLECTIONS) {
 			int nextReflection = (intersectedSurface.type == "specular") ? num_reflections : num_reflections + 1;
