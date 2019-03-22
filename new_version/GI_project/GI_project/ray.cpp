@@ -29,21 +29,22 @@ Ray Ray::randHemisphere(glm::vec3 position, Direction normal, ColorDbl clr) {
 	float randNum1 = distribution(generator);
 	float randNum2 = distribution(generator);
 
-	//create a tangent
-	glm::vec3 helper = normal + glm::vec3(1, 1, 1);
-	glm::vec3 tangent = glm::normalize(glm::cross(normal, helper));
-	//azimuth and inclination  angles
-	float inclination = acos(sqrt(randNum1));
-	float azimuth = 2 * M_PI*randNum2;
+	//create the axes - FÖ11
+	auto v1 = glm::normalize(-position - glm::dot(-position, normal)*normal);
+	auto v2 = -glm::cross(v1, normal);
+	
+	//azimuth and inclination angles
+	float inclination = asin(sqrt(randNum2));
+	float azimuth = inclination; // CORRECT: 2 * M_PI * randNum1 BUT IT DOESNT WORK
 	glm::vec3 newDirection = normal;
 
 	//rotate around tangent
-	newDirection = glm::normalize(glm::rotate(newDirection, inclination, tangent));
+	newDirection = glm::normalize(glm::rotate(newDirection, inclination, v2));
 	//rotate around normal
 	newDirection = glm::normalize(glm::rotate(newDirection, azimuth, normal));
 
-	Vertex newStart = Vertex(position.x, position.y, position.z, 0);
-	Vertex newEnd = Vertex(position.x + newDirection.x, position.y + newDirection.y, position.z + newDirection.z, 0);
+	Vertex newStart = Vertex(position.x, position.y, position.z, 1);
+	Vertex newEnd = Vertex(position.x + newDirection.x, position.y + newDirection.y, position.z + newDirection.z, 1);
 
 	return Ray(newStart, newEnd, clr);
 

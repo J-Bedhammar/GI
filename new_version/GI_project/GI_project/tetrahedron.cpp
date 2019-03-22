@@ -1,5 +1,6 @@
 #include "headers/tetrahedron.h"
 #include <cmath>
+#include "gtx/rotate_vector.hpp"
 
 Tetrahedron::Tetrahedron(Vertex c, float h, Surface s)
 	: center(c), height(h), tetrahedronSurface(s)
@@ -9,8 +10,8 @@ Tetrahedron::Tetrahedron(Vertex c, float h, Surface s)
 
 
 	top = center + Vertex(0.0, 0.0, height*(3.0 / 4.0), 0.0);
-	bot1 = center + Vertex(L, 0.0, (-height / 4.0), 0.0);
-	bot2 = center + Vertex((-L / 2.0), (sqrt(3.0) / 2.0)*L, (-height / 4.0), 0.0);
+	bot2 = center + Vertex(-L, 0.0, (-height / 4.0), 0.0);
+	bot1 = center + Vertex((-L / 2.0), (sqrt(3.0) / 2.0)*L, (-height / 4.0), 0.0);
 	bot3 = center + Vertex((-L / 2.0), (-sqrt(3.0) / 2.0)*L, (-height / 4.0),  0.0);
 
 	tetraTriangles[0] = Triangle(top, bot1, bot2, s);

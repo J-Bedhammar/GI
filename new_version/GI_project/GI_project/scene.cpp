@@ -3,7 +3,7 @@
 void Scene::createRoom() {
 
 	//colors and surface
-	std::string surfaceType = "specular";
+	std::string surfaceType = "diffuse";
 
 	Surface white{ ColorDbl{ 1,1,1 }, surfaceType };
 	Surface red{ ColorDbl{ 1,0,0 }, surfaceType };

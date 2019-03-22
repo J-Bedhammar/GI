@@ -117,7 +117,7 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 		//if triangle is a lightsource
 		if (r.getTriangle()->getSurface().type == "lightsource") {
 			//getColor? just nu blir det (0,0,0) (svart) det ska inte bli vitt?
-			ColorDbl lightColor = ColorDbl(10.0, 10.0, 10.00);
+			ColorDbl lightColor = ColorDbl(1.0, 1.0, 1.0);
 			return lightColor; //intersectedSurface.getSurfaceColor();
 		}
 
@@ -162,11 +162,8 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 		//MAY NEED TO CHANGE INPUT
 
 		Ray reflectedRay = intersectedSurface.reflectType(r, r.getEnd(), normal);
-
 		
 		double theta = glm::angle(reflectedRay.getDirection(), normal);
-
-		//std::cout << "theta:" << theta << std::endl;
 
 		ColorDbl emittedColor = intersectedSurface.getSurfaceColor();
 		emittedColor = ColorDbl(emittedColor.x*cos(theta), emittedColor.y*cos(theta), emittedColor.z*cos(theta));
@@ -191,8 +188,7 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 
 	//find max rgb value
 	maxColor = glm::max(maxColor, glm::max(pixelColor.x, glm::max(pixelColor.y, pixelColor.z)));
-	
-	// OBS! RETURNS THW WRONG COLOR!!
+
 	
 	return pixelColor;
 }
@@ -201,7 +197,7 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 void Camera::createImage() {
 	
 	double gamma = 1.5;
-
+	std::cout << maxColor << std::endl;
 	//FILE *file = fopen("RayTraceOutput.ppm", "wb"); // not secure
 	std::string name = "RayTraceOutput.ppm";
 	FILE *file;
@@ -217,14 +213,15 @@ void Camera::createImage() {
 
 			(void)fprintf(file, "%d %d %d ",
 				// /maxColor
-				(int)(255 * (Cx / maxColor)),
-				(int)(255 * (Cy / maxColor)),
-				(int)(255 * (Cz / maxColor))
+				(int)(255/maxColor * (Cx)), // / maxColor)),
+				(int)(255/maxColor * (Cy)), // / maxColor)),
+				(int)(255/maxColor * (Cz)) // / maxColor))
 			);
 			//std::cout << color.x << " " << color.y << " " << color.z << std::endl;
+			
 		}
 	}
 	fclose(file);
-	std::cout << "CreateImage completed" << std::endl;
+	std::cout << "Image is done!" << std::endl;
 }
 

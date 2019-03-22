@@ -25,7 +25,7 @@ private:
 	glm::vec4 hAxis;
 	int whichEye = 1;
 
-	static const int CAMERA_VIEW = 400;
+	static const int CAMERA_VIEW = 800;
 	//std::array<std::array<Pixel, CAMERA_VIEW>, CAMERA_VIEW> pixels;
 	Pixel *pixels;
 
