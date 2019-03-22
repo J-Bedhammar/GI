@@ -1,14 +1,17 @@
 #include "headers/scene.h"
 
 void Scene::createRoom() {
-	//colors
-	Surface white{ ColorDbl{ 1,1,1 }, "diffuse" };
-	Surface red{ ColorDbl{ 1,0,0 }, "diffuse" };
-	Surface yellow{ ColorDbl{ 1,1,0 }, "diffuse" };
-	Surface cyan{ ColorDbl{ 0,1,1 }, "diffuse" };
-	Surface blue{ ColorDbl{ 0,0,1 }, "diffuse" };
-	Surface magenta{ ColorDbl{ 1,0,1 }, "diffuse" };
-	Surface green{ ColorDbl{ 0,1,0 }, "diffuse" };
+
+	//colors and surface
+	std::string surfaceType = "specular";
+
+	Surface white{ ColorDbl{ 1,1,1 }, surfaceType };
+	Surface red{ ColorDbl{ 1,0,0 }, surfaceType };
+	Surface yellow{ ColorDbl{ 1,1,0 }, surfaceType };
+	Surface cyan{ ColorDbl{ 0,1,1 }, surfaceType };
+	Surface blue{ ColorDbl{ 0,0,1 }, surfaceType };
+	Surface magenta{ ColorDbl{ 1,0,1 }, surfaceType };
+	Surface green{ ColorDbl{ 0,1,0 }, surfaceType };
 
 	/* Top-view of room, vertex points and sides
 			  a
