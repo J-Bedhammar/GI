@@ -195,8 +195,7 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 
 
 void Camera::createImage() {
-	
-	double gamma = 1.5;
+
 	std::cout << maxColor << std::endl;
 	//FILE *file = fopen("RayTraceOutput.ppm", "wb"); // not secure
 	std::string name = "RayTraceOutput.ppm";
@@ -207,15 +206,10 @@ void Camera::createImage() {
 		for (int c = 0; c < CAMERA_VIEW; c++) {
 			ColorDbl color = pixels[c + r*CAMERA_VIEW].getColor();
 
-			float Cx = pow(color.x, gamma);
-			float Cy = pow(color.y, gamma);
-			float Cz = pow(color.z, gamma);
-
 			(void)fprintf(file, "%d %d %d ",
-				// /maxColor
-				(int)(255/maxColor * (Cx)), // / maxColor)),
-				(int)(255/maxColor * (Cy)), // / maxColor)),
-				(int)(255/maxColor * (Cz)) // / maxColor))
+				(int)(255 * (color.x /maxColor)),
+				(int)(255 * (color.y /maxColor)),
+				(int)(255 * (color.z /maxColor))
 			);
 			//std::cout << color.x << " " << color.y << " " << color.z << std::endl;
 			
