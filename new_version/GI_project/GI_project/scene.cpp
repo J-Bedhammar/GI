@@ -12,6 +12,7 @@ void Scene::createRoom() {
 	Surface blue{ ColorDbl{ 0,0,1 }, surfaceType };
 	Surface magenta{ ColorDbl{ 1,0,1 }, surfaceType };
 	Surface green{ ColorDbl{ 0,1,0 }, surfaceType };
+	Surface lightSurface{ ColorDbl{ 1,1,1 }, "lightsource" };
 
 	/* Top-view of room, vertex points and sides
 			  a
@@ -31,6 +32,9 @@ void Scene::createRoom() {
 	Vertex dTop = Vertex(13, 0, 5, 0);
 	Vertex eTop = Vertex(10, -6, 5, 0);
 	Vertex fTop = Vertex(0, -6, 5, 0);
+	Vertex zeldaL = Vertex(3.5, -3, 5, 0);
+	Vertex zeldaR = Vertex(3.5, 3, 5, 0);
+	Vertex zeldaB = Vertex(10, 0, 5, 0);
 
 	Vertex aBot = Vertex(-3, 0, -5, 0);		//Bot
 	Vertex bBot = Vertex(0, 6, -5, 0);
@@ -45,7 +49,13 @@ void Scene::createRoom() {
 		triangles.push_back(Triangle(aTop, bTop, cTop, white));
 		triangles.push_back(Triangle(cTop, dTop, eTop, white));
 		triangles.push_back(Triangle(eTop, fTop, aTop, white));
-		triangles.push_back(Triangle(aTop, cTop, eTop, white));
+		triangles.push_back(Triangle(zeldaL, aTop, zeldaR, white));
+		triangles.push_back(Triangle(zeldaR, cTop, zeldaB, white));
+		triangles.push_back(Triangle(zeldaB, eTop, zeldaL, white));
+		//triangles.push_back(Triangle(aTop, cTop, eTop, white));
+		Triangle lightTriangle = Triangle(zeldaL, zeldaR, zeldaB, lightSurface);
+		Lightsource light = Lightsource(lightTriangle);
+		addLightsource(light);
 
 		//Bot
 		triangles.push_back(Triangle(aBot, cBot, bBot, white));
@@ -108,6 +118,8 @@ ColorDbl Scene::sendShadowRays(Vertex &surfacePoint, ColorDbl surfaceColor, Dire
 	for (int i = 0; i < nrShadowRays; i++) {
 		//get random point on lightsource
 		Vertex randPoint = lightsources.front().getLightTriangle().getRandPoint();
+		//randPoint.z = 4.5;
+		//randPoint.y = 0.0;
 
 		//shoot ray towards light
 		Ray toLight = Ray(surfacePoint, randPoint, black);
@@ -120,29 +132,32 @@ ColorDbl Scene::sendShadowRays(Vertex &surfacePoint, ColorDbl surfaceColor, Dire
 			//std::cout << "Hit sphere" << std::endl;
 			continue;
 		}
-		if (toLight.getTriangle()) {
+		else if (toLight.getTriangle()) {
 			if (toLight.getTriangle()->getSurface().type != "lightsource") {
 				continue;
 			}
-			else{
+			else {
 				//std::cout << surfacePoint.x << "," << surfacePoint.y << "," << surfacePoint.z << std::endl;
 				//std::cout << "(" << surfaceColor.x << "," << surfaceColor.y << "," << surfaceColor.z << ")" << std::endl;
 
 				Direction lightsourceDir = glm::vec3(randPoint.x - surfacePoint.x, randPoint.y - surfacePoint.y, randPoint.z - surfacePoint.z);
 				float distancetoLight = glm::distance(surfacePoint, randPoint);
 				float dotProduct = glm::dot(normal, lightsourceDir); // *glm::clamp((double)glm::dot(toLight.getTriangle()->getNormal(), -lightsourceDir), 0.0, 1.0);
-				
+
 				if (dotProduct < 0)
 					dotProduct = 0;
 
 				//tweak to change illumination in scene
-				float intensity = dotProduct / pow(distancetoLight,2);
-				float emittance = 20.0;
+				float intensity = dotProduct / pow(distancetoLight, 2);
+				float emittance = 10.0;
 				lightcontribution += surfaceColor * intensity * emittance;
-				
-				if(lightcontribution.x < 0 || lightcontribution.y < 0 || lightcontribution.z < 0)
+
+				if (lightcontribution.x < 0 || lightcontribution.y < 0 || lightcontribution.z < 0)
 					std::cout << "Negative - S " << glm::min(surfaceColor.x, glm::min(surfaceColor.y, surfaceColor.z)) << ", I " << intensity << std::endl;
 			}
+		}
+		else {
+			//std::cout << "Doesnt hit anything: " << randPoint.x << ", " << randPoint.y << ", " << randPoint.z << std::endl;
 		}
 	}
 

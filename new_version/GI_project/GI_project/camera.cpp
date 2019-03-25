@@ -120,7 +120,6 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 		intersectedSurface = r.getTriangle()->getSurface();
 		//if triangle is a lightsource
 		if (r.getTriangle()->getSurface().type == "lightsource") {
-			//getColor? just nu blir det (0,0,0) (svart) det ska inte bli vitt?
 			ColorDbl lightColor = ColorDbl(10.0, 10.0, 10.0);
 			return lightColor; //intersectedSurface.getSurfaceColor();
 		}

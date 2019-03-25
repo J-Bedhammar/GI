@@ -32,7 +32,7 @@ int main(){
 	//Add objects to scene
 	scene.addSphere(sphere);
 	scene.addTetrahedron(tetra);
-	scene.addLightsource(light);
+	//scene.addLightsource(light);
 	
 	camera.render(scene); 
 
