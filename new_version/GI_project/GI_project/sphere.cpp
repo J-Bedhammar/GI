@@ -39,7 +39,7 @@ bool Sphere::raySphereIntersection(Ray &r) {
 	float d2 = -b_half - sqrt(b_ac);
 
 	if (d1 < d2) {
-		//we intersect the spher at point x = 0 + dl;
+		//We intersect the sphere at point x = 0 + dl;
 		Vertex intersectionPoint = Vertex(o.x + d1*l.x, o.y + d1*l.y, o.z + d1*l.z, 1.0f);
 		
 		//Change endpoint of our ray to the intersection point
@@ -48,7 +48,7 @@ bool Sphere::raySphereIntersection(Ray &r) {
 		return true;
 	}
 	else if (d2 < d1) {
-		//we intersect the spher at point x = o + dl
+		//We intersect the sphere at point x = o + dl
 		Vertex intersectionPoint = Vertex(o.x + d2*l.x, o.y + d2*l.y, o.z + d2*l.z, 1.0f);
 
 		//Change endpoint of our ray to the intersection point
