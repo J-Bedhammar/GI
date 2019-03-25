@@ -2,7 +2,9 @@
 #include "gtx/vector_angle.hpp"
 #include <stdio.h>
 #include <errno.h>
-//CASTRAY
+#include <algorithm>
+
+
 Camera::Camera(int i) {
 	if (i == 1)
 		whichEye = i;
@@ -11,7 +13,7 @@ Camera::Camera(int i) {
 	else
 		std::cout << "Wrong input (cameraPosition)" << std::endl;
 
-	//JULLES KOD
+	/*
 	pixelplane[0] = glm::vec4(0.0f, 1.0f, 1.0f, 1.0f);
 	pixelplane[1] = glm::vec4(0.0f, -1.0f, 1.0f, 1.0f);
 	pixelplane[2] = glm::vec4(0.0f, 1.0f, -1.0f, 1.0f);
@@ -23,6 +25,8 @@ Camera::Camera(int i) {
 
 	planeWidthAxis = glm::normalize(planeWidthAxis);
 	planeHeigthAxis = glm::normalize(planeHeigthAxis);
+	*/
+
 
 	pixels = new Pixel[CAMERA_VIEW*CAMERA_VIEW];
 }
@@ -81,7 +85,7 @@ void Camera::render(Scene& scene) {
 	createImage();
 }
 
-//JULLES KOD
+/*
 Ray* Camera::pixeltoray2(int w, int h) {
 
 	std::random_device rd;  //Will be used to obtain a seed for the random number engine
@@ -97,7 +101,7 @@ Ray* Camera::pixeltoray2(int w, int h) {
 	Ray* r = new Ray(eye1, Vertex(pixelPos.x, pixelPos.y, pixelPos.z, pixelPos.w), ColorDbl(1, 1, 1));
 	return r;
 
-}
+}*/
 
 ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) {
 
@@ -121,7 +125,6 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 			return lightColor; //intersectedSurface.getSurfaceColor();
 		}
 
-
 		//Bounce - check type - hemisphere or reflect do it in ray/surface
 		//MAY NEED TO CHANGE INPUT
 
@@ -130,19 +133,16 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 		//Emitted color
 		double theta = glm::angle(reflectedRay.getDirection(), normal);
 		ColorDbl emittedColor = intersectedSurface.getSurfaceColor();
-		emittedColor = ColorDbl(emittedColor.x*cos(theta), emittedColor.y*cos(theta), emittedColor.z*cos(theta));
-
-		/*if (percent % 20 == 0)
-			std::cout << emittedColor.x << " " << emittedColor.y << " " << emittedColor.z << " - " << percent << std::endl;
-		*/
+		emittedColor = ColorDbl(emittedColor.x*abs(cos(theta)), emittedColor.y*abs(cos(theta)), emittedColor.z*abs(cos(theta)));
 		
-
 		//shadowrays
 		ColorDbl illumination = scene.sendShadowRays(r.getEnd(), intersectedSurface.getSurfaceColor(), normal);
 		pixelColor += emittedColor;
 		pixelColor += illumination; // remake illumiation
 		//std::cout << "illumination: (" << illumination.x << " , " << illumination.y << " , " << illumination.z << ")" << std::endl;
 
+		if (pixelColor.x < 0 || pixelColor.y < 0 || pixelColor.z < 0)
+			std::cout << "Triangle - Negative - E " << glm::min(emittedColor.x, glm::min(emittedColor.y, emittedColor.z)) << ", I " << glm::min(illumination.x, glm::min(illumination.y, illumination.z)) << std::endl;
 
 		//add Russian roulette?
 		if (num_reflections < MAX_REFLECTIONS) {
@@ -159,20 +159,21 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 		intersectedSurface = r.getSphere()->getSurface();
 
 		//Bounce - check type - hemisphere or reflect do it in ray/surface
-		//MAY NEED TO CHANGE INPUT
-
 		Ray reflectedRay = intersectedSurface.reflectType(r, r.getEnd(), normal);
 		
 		double theta = glm::angle(reflectedRay.getDirection(), normal);
 
 		ColorDbl emittedColor = intersectedSurface.getSurfaceColor();
-		emittedColor = ColorDbl(emittedColor.x*cos(theta), emittedColor.y*cos(theta), emittedColor.z*cos(theta));
+		emittedColor = ColorDbl(emittedColor.x*abs(cos(theta)), emittedColor.y*abs(cos(theta)), emittedColor.z*abs(cos(theta)));
 
 
 		//shadowrays
 		ColorDbl illumination = scene.sendShadowRays(r.getEnd(), intersectedSurface.getSurfaceColor(), normal);
 		pixelColor += emittedColor;
 		pixelColor += illumination;
+
+		if (pixelColor.x < 0 || pixelColor.y < 0 || pixelColor.z < 0)
+			std::cout << "Sphere - Negative - E " << glm::min(emittedColor.x, glm::min(emittedColor.y, emittedColor.z)) << ", I " << glm::min(illumination.x, glm::min(illumination.y, illumination.z)) << std::endl;
 	
 
 		if (num_reflections < MAX_REFLECTIONS) {
@@ -188,8 +189,8 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 
 	//find max rgb value
 	maxColor = glm::max(maxColor, glm::max(pixelColor.x, glm::max(pixelColor.y, pixelColor.z)));
+	minColor = glm::min(minColor, glm::min(pixelColor.x, glm::min(pixelColor.y, pixelColor.z)));
 
-	
 	return pixelColor;
 }
 
@@ -197,6 +198,7 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 void Camera::createImage() {
 
 	std::cout << maxColor << std::endl;
+	std::cout << minColor << ", After norm - " << minColor/maxColor <<std::endl;
 	//FILE *file = fopen("RayTraceOutput.ppm", "wb"); // not secure
 	std::string name = "RayTraceOutput.ppm";
 	FILE *file;
@@ -205,6 +207,10 @@ void Camera::createImage() {
 	for (int r = 0; r < CAMERA_VIEW; r++) {
 		for (int c = 0; c < CAMERA_VIEW; c++) {
 			ColorDbl color = pixels[c + r*CAMERA_VIEW].getColor();
+
+			if (color.x < 0 || color.y < 0 || color.z < 0)
+				std::cout << "Negative " << color.x  << ", " << color.y << ", " << std::endl;
+
 
 			(void)fprintf(file, "%d %d %d ",
 				(int)(255 * (color.x /maxColor)),

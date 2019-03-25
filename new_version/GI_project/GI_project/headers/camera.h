@@ -7,14 +7,15 @@
 #include "definitions.h"
 #include <array>
 //#include <fstream>
-//castray
+
 
 class Camera {
 
 private:
 	Vertex eye1 = Vertex(0, 0, 0, 0);
 	Vertex eye2 = Vertex(-2, 0, 0, 0);
-	glm::vec4 cameraplane[4];
+	
+	/*glm::vec4 cameraplane[4];
 
 	glm::vec4 pixelplane[4]; 
 	glm::vec4 planeWidthAxis;
@@ -22,10 +23,11 @@ private:
 
 	float pixelStep;
 	glm::vec4 wAxis;
-	glm::vec4 hAxis;
+	glm::vec4 hAxis;*/
+
 	int whichEye = 1;
 
-	static const int CAMERA_VIEW = 800;
+	static const int CAMERA_VIEW = 500;
 	//std::array<std::array<Pixel, CAMERA_VIEW>, CAMERA_VIEW> pixels;
 	Pixel *pixels;
 
@@ -36,10 +38,11 @@ public:
 	~Camera() = default;
 	void render(Scene& scene);
 	void createImage();
-	Ray* pixeltoray2(int w, int h);
+	/*Ray* pixeltoray2(int w, int h);*/
 
-	const int MAX_REFLECTIONS = 10;
-	float maxColor = 0.0;
+	const int MAX_REFLECTIONS = 15;
+	float maxColor = 0.0f;
+	float minColor = 0.0f;
 };
 
 #endif
