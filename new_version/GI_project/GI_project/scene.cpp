@@ -32,9 +32,9 @@ void Scene::createRoom() {
 	Vertex dTop = Vertex(13, 0, 5, 0);
 	Vertex eTop = Vertex(10, -6, 5, 0);
 	Vertex fTop = Vertex(0, -6, 5, 0);
-	Vertex zeldaL = Vertex(3.5, -3, 5, 0);
-	Vertex zeldaR = Vertex(3.5, 3, 5, 0);
-	Vertex zeldaB = Vertex(10, 0, 5, 0);
+	Vertex center = Vertex(5, 0, 5, 0);
+	Vertex centerL = Vertex(10, -2, 5, 0);
+	Vertex centerR = Vertex(10, 2, 5, 0);
 
 	Vertex aBot = Vertex(-3, 0, -5, 0);		//Bot
 	Vertex bBot = Vertex(0, 6, -5, 0);
@@ -46,14 +46,14 @@ void Scene::createRoom() {
 	//Triangles
 
 		//Top
-		triangles.push_back(Triangle(aTop, bTop, cTop, white));
+		triangles.push_back(Triangle(aTop, bTop, fTop, white));
+		triangles.push_back(Triangle(bTop, center, fTop, white));
+		triangles.push_back(Triangle(bTop, cTop, center, white));
 		triangles.push_back(Triangle(cTop, dTop, eTop, white));
-		triangles.push_back(Triangle(eTop, fTop, aTop, white));
-		triangles.push_back(Triangle(zeldaL, aTop, zeldaR, white));
-		triangles.push_back(Triangle(zeldaR, cTop, zeldaB, white));
-		triangles.push_back(Triangle(zeldaB, eTop, zeldaL, white));
-		//triangles.push_back(Triangle(aTop, cTop, eTop, white));
-		Triangle lightTriangle = Triangle(zeldaL, zeldaR, zeldaB, lightSurface);
+		triangles.push_back(Triangle(fTop, center, eTop, white));
+		triangles.push_back(Triangle(eTop, center, centerL, white));
+		triangles.push_back(Triangle(center, cTop, centerR, white));
+		Triangle lightTriangle = Triangle(centerL, center, centerR, lightSurface);
 		Lightsource light = Lightsource(lightTriangle);
 		addLightsource(light);
 

@@ -40,7 +40,7 @@ public:
 	void createImage();
 	/*Ray* pixeltoray2(int w, int h);*/
 
-	const int MAX_REFLECTIONS = 15;
+	const int MAX_REFLECTIONS = 10;
 	float maxColor = 0.0f;
 	float minColor = 0.0f;
 };
