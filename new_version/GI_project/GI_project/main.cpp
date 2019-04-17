@@ -17,7 +17,7 @@ int main(){
 	Tetrahedron tetra = Tetrahedron(tetraCenter, 3.0, tetraSur);
 
 	//Create sphere
-	Vertex sphereCenter = Vertex(6.5f, 4.0f, 1.0f, 0.0f);
+	Vertex sphereCenter = Vertex(8.5f, 4.0f, -3.0f, 0.0f);
 	Surface sphereSur = Surface(ColorDbl(1.0, 0.0, 0.0), "specular");
 	Sphere sphere = Sphere(1.0f, sphereCenter, sphereSur);
 	
@@ -30,7 +30,7 @@ int main(){
 	Lightsource light = Lightsource(lightTriangle);
 
 	//Add objects to scene
-	//scene.addSphere(sphere);
+	scene.addSphere(sphere);
 	scene.addTetrahedron(tetra);
 	//scene.addLightsource(light);
 	

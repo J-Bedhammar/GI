@@ -128,9 +128,6 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 			return lightColor; //intersectedSurface.getSurfaceColor();
 		}
 
-		//Bounce - check type - hemisphere or reflect do it in ray/surface
-		//MAY NEED TO CHANGE INPUT
-
 		Ray reflectedRay = intersectedSurface.reflectType(r, normal);
 
 		//Emitted color

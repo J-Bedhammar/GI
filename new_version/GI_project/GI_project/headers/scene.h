@@ -15,7 +15,7 @@ private:
 	std::vector<Tetrahedron> tetrahedrons;
 	std::vector<Lightsource> lightsources;
 
-	const int nrShadowRays = 1;
+	const int nrShadowRays = 10;
 
 public:
 	Scene() {

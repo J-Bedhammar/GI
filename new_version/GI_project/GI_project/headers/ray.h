@@ -38,7 +38,7 @@ public:
 	Sphere* getSphere() { return collisionSphere; }
 	Direction getDirection();
 
-	Ray randHemisphere(Ray r, Direction normal, ColorDbl clr);
+	Ray randHemisphere(Ray& r, Direction normal, ColorDbl clr);
 
 
 };

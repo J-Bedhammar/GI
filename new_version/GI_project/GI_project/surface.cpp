@@ -34,11 +34,13 @@ Ray Surface::reflectType( Ray& r, const Direction &normal ) {
 
 	}
 	else if (type == "specular") {
-		glm::vec3 newDirection = glm::reflect(r.getDirection(), normal);
+		glm::vec3 rayDirection = r.getEnd() - r.getStart();
+		glm::vec3 newDirection = glm::reflect(rayDirection, normal);
 
-		Vertex newEnd = Vertex(newDirection.x + r.getStart().x, newDirection.y + r.getStart().y, newDirection.z + r.getStart().z, 0)*100.0f;
+		const float distance = 1000.0f;			// Check err when adding sphere - see Ray.cpp
+		Vertex newEnd = Vertex(r.getEnd().x + (newDirection.x*distance), r.getEnd().y + (newDirection.y*distance), r.getEnd().z + (newDirection.z*distance), 0);
 
-		Ray newRay = Ray(r.getStart(), newEnd, getSurfaceColor());
+		Ray newRay = Ray(r.getEnd(), newEnd, getSurfaceColor());
 
 		return newRay;
 	}

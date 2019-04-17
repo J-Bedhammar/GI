@@ -41,7 +41,7 @@ public:
 	int subpixels = 4;
 	/*Ray* pixeltoray2(int w, int h);*/
 
-	const int MAX_REFLECTIONS = 5;
+	const int MAX_REFLECTIONS = 10;
 	float maxColor = 0.0f;
 	float minColor = 0.0f;
 };
