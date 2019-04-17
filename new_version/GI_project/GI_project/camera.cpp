@@ -46,6 +46,7 @@ void Camera::render(Scene& scene) {
 		std::cout << percent << "%" << std::endl;
 
 		for (int c = 0; c < CAMERA_VIEW; c++) {
+
 			float fov = M_PI / 2;
 
 			float Py = tan(fov / 2) * (1 - 2 * (c + 0.5) / CAMERA_VIEW);
@@ -71,6 +72,7 @@ void Camera::render(Scene& scene) {
 			//Ray *ray = pixeltoray2(r, c);
 			//rayIntersection
 			//check if terminated
+			//std::cout << "CastRay" << std::endl;
 			ColorDbl color = castRay(ray, 1, scene, percent);
 
 			//Print out color
@@ -105,12 +107,14 @@ Ray* Camera::pixeltoray2(int w, int h) {
 
 ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) {
 
-	
+	//std::cout << r.getEnd().x << " , " << r.getEnd().y << " , " << r.getEnd().z << std::endl;
+	//std::cout << "castRay" << r.getDirection().x << ", " << r.getDirection().y << ", " << r.getDirection().z << std::endl;
 	ColorDbl pixelColor = ColorDbl(0.0, 0.0, 0.0);
 	//Find first intersection point on a surface
 
 	//what does it intersect with?
 	scene.intersections(r);
+
 	//Declare a surface and normal 
 	Surface intersectedSurface;
 	Direction normal;
@@ -120,14 +124,14 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 		intersectedSurface = r.getTriangle()->getSurface();
 		//if triangle is a lightsource
 		if (r.getTriangle()->getSurface().type == "lightsource") {
-			ColorDbl lightColor = ColorDbl(10.0, 10.0, 10.0);
+			ColorDbl lightColor = ColorDbl(1.0, 1.0, 1.0);
 			return lightColor; //intersectedSurface.getSurfaceColor();
 		}
 
 		//Bounce - check type - hemisphere or reflect do it in ray/surface
 		//MAY NEED TO CHANGE INPUT
 
-		Ray reflectedRay = intersectedSurface.reflectType(r, r.getEnd(), normal);
+		Ray reflectedRay = intersectedSurface.reflectType(r, normal);
 
 		//Emitted color
 		double theta = glm::angle(reflectedRay.getDirection(), normal);
@@ -138,19 +142,13 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 		ColorDbl illumination = scene.sendShadowRays(r.getEnd(), intersectedSurface.getSurfaceColor(), normal);
 		pixelColor += emittedColor;
 		pixelColor += illumination; // remake illumiation
-		//std::cout << "illumination: (" << illumination.x << " , " << illumination.y << " , " << illumination.z << ")" << std::endl;
-
-		if (pixelColor.x < 0 || pixelColor.y < 0 || pixelColor.z < 0)
-			std::cout << "Triangle - Negative - E " << glm::min(emittedColor.x, glm::min(emittedColor.y, emittedColor.z)) << ", I " << glm::min(illumination.x, glm::min(illumination.y, illumination.z)) << std::endl;
 
 		//add Russian roulette?
 		if (num_reflections < MAX_REFLECTIONS) {
 			int nextReflection = (intersectedSurface.type == "specular") ? num_reflections : (num_reflections + 1);
 			//sends out the reflected ray, multiplied with the reflectioncoefficant 
-
-			pixelColor += castRay(reflectedRay, nextReflection, scene, percent) * intersectedSurface.getReflection();
+			pixelColor += castRay(reflectedRay, nextReflection, scene, percent)*intersectedSurface.getReflection();
 		}
-
 
 	}
 	else if(r.getSphere()){ //intersects with sphere
@@ -158,27 +156,23 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 		intersectedSurface = r.getSphere()->getSurface();
 
 		//Bounce - check type - hemisphere or reflect do it in ray/surface
-		Ray reflectedRay = intersectedSurface.reflectType(r, r.getEnd(), normal);
+		Ray reflectedRay = intersectedSurface.reflectType(r, normal);
 		
 		double theta = glm::angle(reflectedRay.getDirection(), normal);
 
 		ColorDbl emittedColor = intersectedSurface.getSurfaceColor();
 		emittedColor = ColorDbl(emittedColor.x*abs(cos(theta)), emittedColor.y*abs(cos(theta)), emittedColor.z*abs(cos(theta)));
 
-
 		//shadowrays
 		ColorDbl illumination = scene.sendShadowRays(r.getEnd(), intersectedSurface.getSurfaceColor(), normal);
 		pixelColor += emittedColor;
-		pixelColor += illumination;
+		pixelColor += illumination; // *2.0f;
 
-		if (pixelColor.x < 0 || pixelColor.y < 0 || pixelColor.z < 0)
-			std::cout << "Sphere - Negative - E " << glm::min(emittedColor.x, glm::min(emittedColor.y, emittedColor.z)) << ", I " << glm::min(illumination.x, glm::min(illumination.y, illumination.z)) << std::endl;
-	
 
 		if (num_reflections < MAX_REFLECTIONS) {
 			int nextReflection = (intersectedSurface.type == "specular") ? num_reflections : num_reflections + 1;
 			//sends out the reflected ray, multiplied with the reflectioncoefficant 
-			pixelColor += castRay(reflectedRay, nextReflection, scene, percent) * intersectedSurface.getReflection();
+			pixelColor += castRay(reflectedRay, nextReflection, scene, percent)*intersectedSurface.getReflection();
 		}
 	}
 	else { //No intersection

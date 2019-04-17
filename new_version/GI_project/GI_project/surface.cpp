@@ -21,20 +21,22 @@ ColorDbl Surface::getSurfaceColor() {
 		return surfaceColor;
 	}
 	else { // if type == lightsource
-		return ColorDbl(10.0f, 10.0f, 10.0f);
+		return ColorDbl(0.0f, 0.0f, 0.0f);
 	}
 }
 
 //BRDF
-Ray Surface::reflectType( Ray& r, const glm::vec3 &position, const Direction &normal ) {
+Ray Surface::reflectType( Ray& r, const Direction &normal ) {
 
 	if (type == "diffuse") {
-		return r.randHemisphere(position, normal, getSurfaceColor());
+		
+		return r.randHemisphere(r, normal, getSurfaceColor());
+
 	}
 	else if (type == "specular") {
 		glm::vec3 newDirection = glm::reflect(r.getDirection(), normal);
 
-		Vertex newEnd = Vertex(newDirection.x + r.getStart().x, newDirection.y + r.getStart().y, newDirection.z + r.getStart().z, 0);
+		Vertex newEnd = Vertex(newDirection.x + r.getStart().x, newDirection.y + r.getStart().y, newDirection.z + r.getStart().z, 0)*100.0f;
 
 		Ray newRay = Ray(r.getStart(), newEnd, getSurfaceColor());
 

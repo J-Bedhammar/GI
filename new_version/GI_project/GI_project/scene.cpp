@@ -149,11 +149,10 @@ ColorDbl Scene::sendShadowRays(Vertex &surfacePoint, ColorDbl surfaceColor, Dire
 
 				//tweak to change illumination in scene
 				float intensity = dotProduct / pow(distancetoLight, 2);
-				float emittance = 10.0;
+				float emittance = 15.0;
 				lightcontribution += surfaceColor * intensity * emittance;
 
-				if (lightcontribution.x < 0 || lightcontribution.y < 0 || lightcontribution.z < 0)
-					std::cout << "Negative - S " << glm::min(surfaceColor.x, glm::min(surfaceColor.y, surfaceColor.z)) << ", I " << intensity << std::endl;
+
 			}
 		}
 		else {

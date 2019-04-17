@@ -22,6 +22,7 @@ Triangle::Triangle(Vertex &a, Vertex &b, Vertex &c, Surface s)
 
 
 bool Triangle::rayTriangleIntersection(Ray &r) {
+
 	const float EPSILON = 0.00000001f;
 
 	//Get start and endpoints of the ray

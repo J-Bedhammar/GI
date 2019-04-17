@@ -8,14 +8,14 @@ class Surface {
 
 private:
 	ColorDbl surfaceColor;
-	float reflection = 0.85f;
+	float reflection = 0.4f;
 
 public:
 	Surface();
 	~Surface() = default;
 	Surface(const ColorDbl &color, const std::string st);
 	ColorDbl getSurfaceColor();
-	Ray reflectType(Ray& r, const glm::vec3 &position, const Direction &normal);
+	Ray reflectType(Ray& r, const Direction &normal);
 	float getReflection() { return reflection; };
 
 	std::string type = "diffuse";

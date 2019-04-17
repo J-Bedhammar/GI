@@ -27,7 +27,7 @@ private:
 
 	int whichEye = 1;
 
-	static const int CAMERA_VIEW = 500;
+	static const int CAMERA_VIEW = 400;
 	//std::array<std::array<Pixel, CAMERA_VIEW>, CAMERA_VIEW> pixels;
 	Pixel *pixels;
 
@@ -38,9 +38,10 @@ public:
 	~Camera() = default;
 	void render(Scene& scene);
 	void createImage();
+	int subpixels = 4;
 	/*Ray* pixeltoray2(int w, int h);*/
 
-	const int MAX_REFLECTIONS = 10;
+	const int MAX_REFLECTIONS = 5;
 	float maxColor = 0.0f;
 	float minColor = 0.0f;
 };
