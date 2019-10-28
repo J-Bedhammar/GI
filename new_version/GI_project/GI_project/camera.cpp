@@ -51,10 +51,10 @@ void Camera::render(Scene& scene) {
 			double pixelStep = 1.0 / subpixels;
 			ColorDbl color = ColorDbl(0, 0, 0);
 
-			for (int subPy = 0; subPy < (subpixels/3); ++subPy) {
+			for (int subPy = 0; subPy < subpixels; ++subPy) {
 				float Py = tan(fov / 2) * (1 - 2 * (randMinMax(c + (subPy * pixelStep), c + ((subPy+1.0)* pixelStep))) / CAMERA_VIEW);
 
-				for (int subPz = 0; subPz < (subpixels/3); ++subPz) {
+				for (int subPz = 0; subPz < subpixels; ++subPz) {
 					float Pz = tan(fov / 2) * (2 * (randMinMax(r + (subPz * pixelStep), r + ((subPz+1.0) * pixelStep))) / CAMERA_VIEW - 1);
 
 					Vertex ps = eye1;
@@ -84,7 +84,7 @@ void Camera::render(Scene& scene) {
 				}
 			}
 
-			color /= (samples * subpixels);
+			color /= (samples * subpixels * subpixels);
 
 			//Print out color
 			//std::cout << "Color: (" << color.x << " , " << color.y << " , " << color.z << ")" << std::endl;

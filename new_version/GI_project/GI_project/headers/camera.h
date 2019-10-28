@@ -27,7 +27,7 @@ private:
 
 	int whichEye = 1;
 
-	static const int CAMERA_VIEW = 100;
+	static const int CAMERA_VIEW = 400;
 	//std::array<std::array<Pixel, CAMERA_VIEW>, CAMERA_VIEW> pixels;
 	Pixel *pixels;
 
@@ -39,7 +39,7 @@ public:
 	~Camera() = default;
 	void render(Scene& scene);
 	void createImage();
-	double subpixels = 9;
+	double subpixels = 3;
 	double samples = 1;
 	/*Ray* pixeltoray2(int w, int h);*/
 
