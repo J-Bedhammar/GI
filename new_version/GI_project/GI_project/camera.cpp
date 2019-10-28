@@ -150,8 +150,26 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 		pixelColor += emittedColor;
 		pixelColor += illumination; // remake illumiation
 
-		//add Russian roulette?
-		if (num_reflections < MAX_REFLECTIONS) {
+									//Russian roulette
+		float threshold = 0.4;
+		static std::default_random_engine generator;
+		static std::uniform_real_distribution<float> distribution(0.0, 1.0);
+		float randNum = distribution(generator);
+		bool terminate = false;
+
+		//may get terminated
+		if (randNum < threshold) {
+			//randomly terminate ray depending on its contribution
+
+			float randNum2 = distribution(generator);
+			float contribution = glm::max(glm::max(emittedColor.x, emittedColor.y), emittedColor.z);
+
+			if (contribution < randNum2) {
+				terminate = true;
+			}
+		}
+
+		if (num_reflections < MAX_REFLECTIONS && !terminate) {
 			int nextReflection = (intersectedSurface.type == "specular") ? num_reflections : (num_reflections + 1);
 			//sends out the reflected ray, multiplied with the reflectioncoefficant 
 			pixelColor += castRay(reflectedRay, nextReflection, scene, percent)*intersectedSurface.getReflection();
@@ -176,7 +194,26 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 		pixelColor += illumination; // *2.0f;
 
 
-		if (num_reflections < MAX_REFLECTIONS) {
+		//Russian roulette
+		float threshold = 0.4;
+		static std::default_random_engine generator;
+		static std::uniform_real_distribution<float> distribution(0.0, 1.0);
+		float randNum = distribution(generator);
+		bool terminate = false;
+
+		//may get terminated
+		if (randNum < threshold) {
+			//randomly terminate ray depending on its contribution
+
+			float randNum2 = distribution(generator);
+			float contribution = glm::max(glm::max(emittedColor.x, emittedColor.y), emittedColor.z);
+
+			if (contribution < randNum2) {
+				terminate = true;
+			}
+		}
+
+		if (num_reflections < MAX_REFLECTIONS && !terminate) {
 			int nextReflection = (intersectedSurface.type == "specular") ? num_reflections : num_reflections + 1;
 			//sends out the reflected ray, multiplied with the reflectioncoefficant 
 			pixelColor += castRay(reflectedRay, nextReflection, scene, percent)*intersectedSurface.getReflection();
