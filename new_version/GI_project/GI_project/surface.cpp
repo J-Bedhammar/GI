@@ -21,7 +21,7 @@ ColorDbl Surface::getSurfaceColor() {
 		return surfaceColor;
 	}
 	else { // if type == lightsource
-		return ColorDbl(0.0f, 0.0f, 0.0f);
+		return ColorDbl(1.0f, 1.0f, 1.0f);
 	}
 }
 

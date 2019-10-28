@@ -48,32 +48,43 @@ void Camera::render(Scene& scene) {
 		for (int c = 0; c < CAMERA_VIEW; c++) {
 
 			float fov = M_PI / 2;
+			double pixelStep = 1.0 / subpixels;
+			ColorDbl color = ColorDbl(0, 0, 0);
 
-			float Py = tan(fov / 2) * (1 - 2 * (c + 0.5) / CAMERA_VIEW);
-			float Pz = tan(fov / 2) * (2 * (r + 0.5) / CAMERA_VIEW - 1);
+			for (int subPy = 0; subPy < (subpixels/3); ++subPy) {
+				float Py = tan(fov / 2) * (1 - 2 * (randMinMax(c + (subPy * pixelStep), c + ((subPy+1.0)* pixelStep))) / CAMERA_VIEW);
 
-			//Vertex xp = Vertex(0.0f, r*delta - 0.99875f, c*delta - 0.99875f, 0.0f); //Use wAxis and hAxis
-			Vertex ps;
+				for (int subPz = 0; subPz < (subpixels/3); ++subPz) {
+					float Pz = tan(fov / 2) * (2 * (randMinMax(r + (subPz * pixelStep), r + ((subPz+1.0) * pixelStep))) / CAMERA_VIEW - 1);
 
-			// choose eye
-			if (whichEye == 1)
-				ps = eye1;
-			if (whichEye == 2)
-				ps = eye2;
+					Vertex ps = eye1;
 
-			//end point
-			//glm::vec4 D = glm::normalize(xp - ps) *100.0f;	
-			//Vertex pe = D + ps;
-			Vertex pe = glm::vec4(1.0f, Py, -Pz, 1.0f) * 100.0f;
-			
-			// equation ray from eye to pixel(i,j), color: white
-			Ray ray = Ray(ps, pe, ColorDbl(1, 1, 1));
+					// choose eye
+					if (whichEye == 1)
+						ps = eye1;
+					if (whichEye == 2)
+						ps = eye2;
 
-			//Ray *ray = pixeltoray2(r, c);
-			//rayIntersection
-			//check if terminated
-			//std::cout << "CastRay" << std::endl;
-			ColorDbl color = castRay(ray, 1, scene, percent);
+					//end point
+					//glm::vec4 D = glm::normalize(xp - ps) *100.0f;	
+					//Vertex pe = D + ps;
+					Vertex pe = glm::vec4(1.0f, Py, -Pz, 1.0f) * 100.0f;
+
+					// equation ray from eye to pixel(i,j), color: white
+					Ray ray = Ray(ps, pe, ColorDbl(1, 1, 1));
+
+					//Ray *ray = pixeltoray2(r, c);
+					//rayIntersection
+					//check if terminated
+					//std::cout << "CastRay" << std::endl;
+
+					for (int i = 0; i < samples; i++) {
+						color += castRay(ray, 1, scene, percent);
+					}
+				}
+			}
+
+			color /= (samples * subpixels);
 
 			//Print out color
 			//std::cout << "Color: (" << color.x << " , " << color.y << " , " << color.z << ")" << std::endl;
@@ -124,8 +135,7 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 		intersectedSurface = r.getTriangle()->getSurface();
 		//if triangle is a lightsource
 		if (r.getTriangle()->getSurface().type == "lightsource") {
-			ColorDbl lightColor = ColorDbl(1.0, 1.0, 1.0);
-			return lightColor; //intersectedSurface.getSurfaceColor();
+			return intersectedSurface.getSurfaceColor();
 		}
 
 		Ray reflectedRay = intersectedSurface.reflectType(r, normal);
@@ -184,11 +194,10 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 	return pixelColor;
 }
 
-
 void Camera::createImage() {
 
 	std::cout << maxColor << std::endl;
-	std::cout << minColor << ", After norm - " << minColor/maxColor <<std::endl;
+	std::cout << minColor << ", After norm - " << double(minColor/maxColor) <<std::endl;
 	//FILE *file = fopen("RayTraceOutput.ppm", "wb"); // not secure
 	std::string name = "RayTraceOutput.ppm";
 	FILE *file;
@@ -215,3 +224,10 @@ void Camera::createImage() {
 	std::cout << "Image is done!" << std::endl;
 }
 
+double Camera::randMinMax(const double& min, const double& max) {
+	static std::default_random_engine generator;
+	static std::uniform_real_distribution<float> distribution(0.0, 1.0);
+	float rand = distribution(generator);
+
+	return min + rand * (max - min);
+}

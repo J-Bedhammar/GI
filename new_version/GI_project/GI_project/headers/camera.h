@@ -27,18 +27,20 @@ private:
 
 	int whichEye = 1;
 
-	static const int CAMERA_VIEW = 400;
+	static const int CAMERA_VIEW = 100;
 	//std::array<std::array<Pixel, CAMERA_VIEW>, CAMERA_VIEW> pixels;
 	Pixel *pixels;
 
 	ColorDbl castRay(Ray r, int num_reflections, Scene& scene, int percent);
+	double randMinMax(const double& min, const double& max);
 
 public:
 	Camera(int i);
 	~Camera() = default;
 	void render(Scene& scene);
 	void createImage();
-	int subpixels = 4;
+	double subpixels = 9;
+	double samples = 1;
 	/*Ray* pixeltoray2(int w, int h);*/
 
 	const int MAX_REFLECTIONS = 10;
