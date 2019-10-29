@@ -1,4 +1,5 @@
 #include "headers/sphere.h"
+#include "gtx/intersect.hpp"
 #include <cmath>
 
 Sphere::Sphere(float r, Vertex c, Surface s)
@@ -8,6 +9,8 @@ Sphere::Sphere(float r, Vertex c, Surface s)
 
 bool Sphere::raySphereIntersection(Ray &r) {
 
+	//bool intersect = glm::intersectRaySphere(r.getStart(), r.getDirection(), center, radius*radius, 1000);
+	
 	const float EPSILON = 0.000000000001f;
 
 	//Sphere object following equations in LE6 "The Scene"
@@ -64,13 +67,13 @@ bool Sphere::raySphereIntersection(Ray &r) {
 
 		return true;
 	}
-	return false; // no intersection
+	return false; // no intersection 
 }
 
 
 glm::vec3 Sphere::getNormal(Vertex p) {
 
 	glm::vec3 normal = glm::normalize(p - center);
-
+	
 	return normal;
 }

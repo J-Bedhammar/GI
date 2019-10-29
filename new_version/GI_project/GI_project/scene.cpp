@@ -151,8 +151,6 @@ ColorDbl Scene::sendShadowRays(Vertex &surfacePoint, ColorDbl surfaceColor, Dire
 				float intensity = dotProduct / pow(distancetoLight, 2);
 				float emittance = 15.0;
 				lightcontribution += surfaceColor * intensity * emittance;
-
-
 			}
 		}
 		else {

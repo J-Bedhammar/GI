@@ -150,7 +150,7 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 		pixelColor += emittedColor;
 		pixelColor += illumination; // remake illumiation
 
-									//Russian roulette
+		//Russian roulette
 		float threshold = 0.4;
 		static std::default_random_engine generator;
 		static std::uniform_real_distribution<float> distribution(0.0, 1.0);

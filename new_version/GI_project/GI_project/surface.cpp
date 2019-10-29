@@ -29,7 +29,6 @@ ColorDbl Surface::getSurfaceColor() {
 Ray Surface::reflectType( Ray& r, const Direction &normal ) {
 
 	if (type == "diffuse") {
-		
 		return r.randHemisphere(r, normal, getSurfaceColor());
 
 	}
@@ -38,7 +37,7 @@ Ray Surface::reflectType( Ray& r, const Direction &normal ) {
 		glm::vec3 newDirection = glm::reflect(rayDirection, normal);
 
 		const float distance = 1000.0f;			// Check err when adding sphere - see Ray.cpp
-		Vertex newEnd = Vertex(r.getEnd().x + (newDirection.x*distance), r.getEnd().y + (newDirection.y*distance), r.getEnd().z + (newDirection.z*distance), 0);
+		Vertex newEnd = Vertex(r.getEnd().x + (newDirection.x), r.getEnd().y + (newDirection.y), r.getEnd().z + (newDirection.z), 0)*distance;
 
 		Ray newRay = Ray(r.getEnd(), newEnd, getSurfaceColor());
 
