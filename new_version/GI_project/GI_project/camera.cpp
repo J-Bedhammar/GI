@@ -13,20 +13,6 @@ Camera::Camera(int i) {
 	else
 		std::cout << "Wrong input (cameraPosition)" << std::endl;
 
-	/*
-	pixelplane[0] = glm::vec4(0.0f, 1.0f, 1.0f, 1.0f);
-	pixelplane[1] = glm::vec4(0.0f, -1.0f, 1.0f, 1.0f);
-	pixelplane[2] = glm::vec4(0.0f, 1.0f, -1.0f, 1.0f);
-	pixelplane[3] = glm::vec4(0.0f, -1.0f, -1.0f, 1.0f);
-	planeWidthAxis = (pixelplane[1] - pixelplane[0]);
-	planeHeigthAxis = (pixelplane[2] - pixelplane[0]);
-
-	pixelStep = glm::length(planeHeigthAxis) / CAMERA_VIEW;
-
-	planeWidthAxis = glm::normalize(planeWidthAxis);
-	planeHeigthAxis = glm::normalize(planeHeigthAxis);
-	*/
-
 
 	pixels = new Pixel[CAMERA_VIEW*CAMERA_VIEW];
 }
@@ -51,39 +37,39 @@ void Camera::render(Scene& scene) {
 			double pixelStep = 1.0 / subpixels;
 			ColorDbl color = ColorDbl(0, 0, 0);
 
-			for (int subPy = 0; subPy < subpixels; ++subPy) {
-				float Py = tan(fov / 2) * (1 - 2 * (randMinMax(c + (subPy * pixelStep), c + ((subPy+1.0)* pixelStep))) / CAMERA_VIEW);
+			for (int i = 0; i < samples; i++) {
+				for (int subPy = 0; subPy < subpixels; ++subPy) {
+					float Py = tan(fov / 2) * (1 - 2 * (randMinMax(c + (subPy * pixelStep), c + ((subPy + 1.0) * pixelStep))) / CAMERA_VIEW);
 
-				for (int subPz = 0; subPz < subpixels; ++subPz) {
-					float Pz = tan(fov / 2) * (2 * (randMinMax(r + (subPz * pixelStep), r + ((subPz+1.0) * pixelStep))) / CAMERA_VIEW - 1);
+					for (int subPz = 0; subPz < subpixels; ++subPz) {
+						float Pz = tan(fov / 2) * (2 * (randMinMax(r + (subPz * pixelStep), r + ((subPz + 1.0) * pixelStep))) / CAMERA_VIEW - 1);
 
-					Vertex ps = eye1;
+						Vertex ps = eye1;
 
-					// choose eye
-					if (whichEye == 1)
-						ps = eye1;
-					if (whichEye == 2)
-						ps = eye2;
+						// choose eye
+						if (whichEye == 1)
+							ps = eye1;
+						if (whichEye == 2)
+							ps = eye2;
 
-					//end point
-					//glm::vec4 D = glm::normalize(xp - ps) *100.0f;	
-					//Vertex pe = D + ps;
-					Vertex pe = glm::vec4(1.0f, Py, -Pz, 1.0f) * 100.0f;
+						//end point
+						//glm::vec4 D = glm::normalize(xp - ps) *100.0f;	
+						//Vertex pe = D + ps;
+						Vertex pe = glm::vec4(1.0f, Py, -Pz, 1.0f) * 100.0f;
 
-					// equation ray from eye to pixel(i,j), color: white
-					Ray ray = Ray(ps, pe, ColorDbl(1, 1, 1));
+						// equation ray from eye to pixel(i,j), color: white
+						Ray ray = Ray(ps, pe, ColorDbl(1, 1, 1));
 
-					//Ray *ray = pixeltoray2(r, c);
-					//rayIntersection
-					//check if terminated
-					//std::cout << "CastRay" << std::endl;
+						//Ray *ray = pixeltoray2(r, c);
+						//rayIntersection
+						//check if terminated
+						//std::cout << "CastRay" << std::endl;
 
-					for (int i = 0; i < samples; i++) {
 						color += castRay(ray, 1, scene, percent);
+
 					}
 				}
 			}
-
 			color /= (samples * subpixels * subpixels);
 
 			//Print out color
@@ -98,23 +84,6 @@ void Camera::render(Scene& scene) {
 	createImage();
 }
 
-/*
-Ray* Camera::pixeltoray2(int w, int h) {
-
-	std::random_device rd;  //Will be used to obtain a seed for the random number engine
-	std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
-	std::uniform_real_distribution<> dis(0.0, pixelStep);
-
-
-	std::mt19937 gen1(rd());
-	auto samplePos = static_cast<float>(dis(rd));
-	glm::vec4 pixelPos = pixelplane[0] + (planeWidthAxis * ((w + 1) * pixelStep - samplePos));
-	pixelPos += planeHeigthAxis * ((h + 1) * pixelStep - samplePos);
-
-	Ray* r = new Ray(eye1, Vertex(pixelPos.x, pixelPos.y, pixelPos.z, pixelPos.w), ColorDbl(1, 1, 1));
-	return r;
-
-}*/
 
 ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) {
 
@@ -148,9 +117,9 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 		//shadowrays
 		ColorDbl illumination = scene.sendShadowRays(r.getEnd(), intersectedSurface.getSurfaceColor(), normal);
 		pixelColor += emittedColor;
-		pixelColor += illumination; // remake illumiation
+		pixelColor *= illumination; // remake illumiation
 
-		//Russian roulette
+									//Russian roulette
 		float threshold = 0.4;
 		static std::default_random_engine generator;
 		static std::uniform_real_distribution<float> distribution(0.0, 1.0);
@@ -191,7 +160,7 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 		//shadowrays
 		ColorDbl illumination = scene.sendShadowRays(r.getEnd(), intersectedSurface.getSurfaceColor(), normal);
 		pixelColor += emittedColor;
-		pixelColor += illumination; // *2.0f;
+		pixelColor *= illumination;
 
 
 		//Russian roulette
@@ -244,10 +213,10 @@ void Camera::createImage() {
 		for (int c = 0; c < CAMERA_VIEW; c++) {
 			ColorDbl color = pixels[c + r*CAMERA_VIEW].getColor();
 
-			if (color.x < 0 || color.y < 0 || color.z < 0)
-				std::cout << "Negative " << color.x  << ", " << color.y << ", " << std::endl;
-
-
+			//if (color.x < 0 || color.y < 0 || color.z < 0)
+			//	std::cout << "Negative " << color.x << ", " << color.y << ", " << std::endl;
+			maxColor = 1;
+			
 			(void)fprintf(file, "%d %d %d ",
 				(int)(255 * (color.x /maxColor)),
 				(int)(255 * (color.y /maxColor)),

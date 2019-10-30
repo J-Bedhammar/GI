@@ -140,17 +140,26 @@ ColorDbl Scene::sendShadowRays(Vertex &surfacePoint, ColorDbl surfaceColor, Dire
 				//std::cout << surfacePoint.x << "," << surfacePoint.y << "," << surfacePoint.z << std::endl;
 				//std::cout << "(" << surfaceColor.x << "," << surfaceColor.y << "," << surfaceColor.z << ")" << std::endl;
 
+				// G = cos a * cos b / d^2
+				// qi length of the shadow ray
+				// a inclination angle of w-in relative to normal xn
+				// b inclination angle of w-in relative to normal qi
+
+
 				Direction lightsourceDir = glm::vec3(randPoint.x - surfacePoint.x, randPoint.y - surfacePoint.y, randPoint.z - surfacePoint.z);
 				float distancetoLight = glm::distance(surfacePoint, randPoint);
-				float dotProduct = glm::dot(normal, lightsourceDir); // *glm::clamp((double)glm::dot(toLight.getTriangle()->getNormal(), -lightsourceDir), 0.0, 1.0);
+				
+				float cosAlpha = glm::dot(-lightsourceDir, toLight.getTriangle()->getNormal());
+				float cosBeta = glm::dot(normal, lightsourceDir);
+				
+				if (cosBeta < 0)
+					cosBeta = 0;
 
-				if (dotProduct < 0)
-					dotProduct = 0;
-
-				//tweak to change illumination in scene
-				float intensity = dotProduct / pow(distancetoLight, 2);
 				float emittance = 15.0;
-				lightcontribution += surfaceColor * intensity * emittance;
+				float geometric = (cosAlpha * cosBeta) / glm::pow(distancetoLight, 2);
+
+				lightcontribution += surfaceColor * geometric * emittance;
+				
 			}
 		}
 		else {
