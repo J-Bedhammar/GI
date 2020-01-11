@@ -5,7 +5,6 @@ Triangle::Triangle() {
 }
 
 
-
 Triangle::Triangle(Vertex &a, Vertex &b, Vertex &c, Surface s) 
 	: v0(a), v1(b), v2(c), triangleSurface(s)
 {
@@ -15,8 +14,6 @@ Triangle::Triangle(Vertex &a, Vertex &b, Vertex &c, Surface s)
 
 	//Crossproduct of the edges gives the normal
 	triangleNormal = glm::normalize(glm::cross(E1, E2));
-
-	//std::cout << "Created triangle with the normal: (" << triangleNormal.x << ", " << triangleNormal.y << ", " << triangleNormal.z << ")" << std::endl;
 };
 
 
@@ -29,7 +26,6 @@ bool Triangle::rayTriangleIntersection(Ray &r) {
 	Vertex ps = r.getStart();
 	Vertex pe = r.getEnd();
 	
-
 	//Create the variables for Möller Trumbore
 	glm::vec3 T = ps - v0;			//Vector between Vertex v0 and the ray startpoint
 	glm::vec3 E1 = v1 - v0;			//Edge 1
@@ -37,7 +33,6 @@ bool Triangle::rayTriangleIntersection(Ray &r) {
 	glm::vec3 D = pe - ps;			//Direction rayvector from start-end
 	glm::vec3 P = glm::cross(D, E2);
 	glm::vec3 Q = glm::cross(T, E1);
-
 
 	//Calculate the determinant
 	//The determinant will determine if the ray hits/misses the triangle
@@ -111,12 +106,10 @@ Vertex Triangle::getRandPoint() {
 	Vertex V2 = v2;
 	Vertex V;
 
-	V = V0 + (V1 - V0)* randNum1 + (V2 - V0)*randNum2; //+ glm::vec4(0.0, 0.0, 1.0, 0.0);
+	V = V0 + (V1 - V0)* randNum1 + (V2 - V0)*randNum2; 
 
 	return V;
 }
-
-
 
 
 //Reference for Möller Trumbore

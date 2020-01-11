@@ -3,7 +3,6 @@
 
 #include "definitions.h"
 #include <random>
-//#include <cmath>
 
 class Triangle;
 class Sphere;

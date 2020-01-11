@@ -23,9 +23,10 @@ void Camera::render(Scene& scene) {
 
 	float delta = 2 / float(CAMERA_VIEW);
 
+	//Loop through pixels
 	for (int r = 0; r < CAMERA_VIEW; r++) {
 
-		//Percentage of how much the render function has completed
+		//Print percentage of how much the render function has completed
 		double helper1 = r;
 		double helper2 = CAMERA_VIEW;
 		int percent = (helper1 / helper2) * 100;
@@ -37,8 +38,8 @@ void Camera::render(Scene& scene) {
 			double pixelStep = 1.0 / subpixels;
 			ColorDbl color = ColorDbl(0, 0, 0);
 
-			for (int i = 0; i < samples; i++) {
-				for (int subPy = 0; subPy < subpixels; ++subPy) {
+			for (int i = 0; i < samples; i++) { //Samples
+				for (int subPy = 0; subPy < subpixels; ++subPy) {//Subpixels
 					float Py = tan(fov / 2) * (1 - 2 * (randMinMax(c + (subPy * pixelStep), c + ((subPy + 1.0) * pixelStep))) / CAMERA_VIEW);
 
 					for (int subPz = 0; subPz < subpixels; ++subPz) {
@@ -52,32 +53,23 @@ void Camera::render(Scene& scene) {
 						if (whichEye == 2)
 							ps = eye2;
 
-						//end point
-						//glm::vec4 D = glm::normalize(xp - ps) *100.0f;	
+						//end point	
 						//Vertex pe = D + ps;
 						Vertex pe = glm::vec4(1.0f, Py, -Pz, 1.0f) * 100.0f;
 
 						// equation ray from eye to pixel(i,j), color: white
 						Ray ray = Ray(ps, pe, ColorDbl(1, 1, 1));
 
-						//Ray *ray = pixeltoray2(r, c);
 						//rayIntersection
-						//check if terminated
-						//std::cout << "CastRay" << std::endl;
-
 						color += castRay(ray, 1, scene, percent);
 
 					}
 				}
 			}
+			//Take average of subpixels and samples
 			color /= (samples * subpixels * subpixels);
 
-			//Print out color
-			//std::cout << "Color: (" << color.x << " , " << color.y << " , " << color.z << ")" << std::endl;
-
 			pixels[c + r*CAMERA_VIEW].setColor(color);
-
-			//pixels[c + r*CAMERA_VIEW].addRay(ray);
 		}
 	}
 
@@ -87,11 +79,9 @@ void Camera::render(Scene& scene) {
 
 ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) {
 
-	//std::cout << r.getEnd().x << " , " << r.getEnd().y << " , " << r.getEnd().z << std::endl;
-	//std::cout << "castRay" << r.getDirection().x << ", " << r.getDirection().y << ", " << r.getDirection().z << std::endl;
 	ColorDbl pixelColor = ColorDbl(0.0, 0.0, 0.0);
+	
 	//Find first intersection point on a surface
-
 	//what does it intersect with?
 	scene.intersections(r);
 
@@ -107,6 +97,7 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 			return intersectedSurface.getSurfaceColor();
 		}
 
+		//Reflect, based on type
 		Ray reflectedRay = intersectedSurface.reflectType(r, normal);
 
 		//Emitted color
@@ -114,22 +105,22 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 		ColorDbl emittedColor = intersectedSurface.getSurfaceColor();
 		emittedColor = ColorDbl(emittedColor.x*abs(cos(theta)), emittedColor.y*abs(cos(theta)), emittedColor.z*abs(cos(theta)));
 		
-		//shadowrays
+		//Shadowrays
 		ColorDbl illumination = scene.sendShadowRays(r.getEnd(), intersectedSurface.getSurfaceColor(), normal);
 		pixelColor += emittedColor;
-		pixelColor *= illumination; // remake illumiation
+		pixelColor *= illumination;
 
-									//Russian roulette
+		//Russian roulette
 		float threshold = 0.4;
 		static std::default_random_engine generator;
 		static std::uniform_real_distribution<float> distribution(0.0, 1.0);
 		float randNum = distribution(generator);
 		bool terminate = false;
 
-		//may get terminated
+		//May get terminated
 		if (randNum < threshold) {
+			
 			//randomly terminate ray depending on its contribution
-
 			float randNum2 = distribution(generator);
 			float contribution = glm::max(glm::max(emittedColor.x, emittedColor.y), emittedColor.z);
 
@@ -149,7 +140,7 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 		normal = r.getSphere()->getNormal(r.getEnd());
 		intersectedSurface = r.getSphere()->getSurface();
 
-		//Bounce - check type - hemisphere or reflect do it in ray/surface
+		//Reflect, based on type
 		Ray reflectedRay = intersectedSurface.reflectType(r, normal);
 		
 		double theta = glm::angle(reflectedRay.getDirection(), normal);
@@ -157,7 +148,7 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 		ColorDbl emittedColor = intersectedSurface.getSurfaceColor();
 		emittedColor = ColorDbl(emittedColor.x*abs(cos(theta)), emittedColor.y*abs(cos(theta)), emittedColor.z*abs(cos(theta)));
 
-		//shadowrays
+		//Shadowrays
 		ColorDbl illumination = scene.sendShadowRays(r.getEnd(), intersectedSurface.getSurfaceColor(), normal);
 		pixelColor += emittedColor;
 		pixelColor *= illumination;
@@ -172,8 +163,8 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 
 		//may get terminated
 		if (randNum < threshold) {
+			
 			//randomly terminate ray depending on its contribution
-
 			float randNum2 = distribution(generator);
 			float contribution = glm::max(glm::max(emittedColor.x, emittedColor.y), emittedColor.z);
 
@@ -189,7 +180,6 @@ ColorDbl Camera::castRay(Ray r, int num_reflections, Scene& scene, int percent) 
 		}
 	}
 	else { //No intersection
-		//std::cout << "Castray: did not hit a sphere or triangle!" << std::endl;
 		return pixelColor;
 	}
 
@@ -204,7 +194,6 @@ void Camera::createImage() {
 
 	std::cout << maxColor << std::endl;
 	std::cout << minColor << ", After norm - " << double(minColor/maxColor) <<std::endl;
-	//FILE *file = fopen("RayTraceOutput.ppm", "wb"); // not secure
 	std::string name = "RayTraceOutput.ppm";
 	FILE *file;
 	errno_t err = fopen_s(&file, name.c_str(), "wb");
@@ -213,8 +202,6 @@ void Camera::createImage() {
 		for (int c = 0; c < CAMERA_VIEW; c++) {
 			ColorDbl color = pixels[c + r*CAMERA_VIEW].getColor();
 
-			//if (color.x < 0 || color.y < 0 || color.z < 0)
-			//	std::cout << "Negative " << color.x << ", " << color.y << ", " << std::endl;
 			maxColor = 1;
 			
 			(void)fprintf(file, "%d %d %d ",
@@ -222,8 +209,6 @@ void Camera::createImage() {
 				(int)(255 * (color.y /maxColor)),
 				(int)(255 * (color.z /maxColor))
 			);
-			//std::cout << color.x << " " << color.y << " " << color.z << std::endl;
-			
 		}
 	}
 	fclose(file);

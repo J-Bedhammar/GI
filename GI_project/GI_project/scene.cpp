@@ -118,8 +118,6 @@ ColorDbl Scene::sendShadowRays(Vertex &surfacePoint, ColorDbl surfaceColor, Dire
 	for (int i = 0; i < nrShadowRays; i++) {
 		//get random point on lightsource
 		Vertex randPoint = lightsources.front().getLightTriangle().getRandPoint();
-		//randPoint.z = 4.5;
-		//randPoint.y = 0.0;
 
 		//shoot ray towards light
 		Ray toLight = Ray(surfacePoint, randPoint, black);
@@ -129,7 +127,6 @@ ColorDbl Scene::sendShadowRays(Vertex &surfacePoint, ColorDbl surfaceColor, Dire
 		//hits a sphere
 		if (toLight.getSphere()) {
 			//make the surfacecolor darker alt do not change the color
-			//std::cout << "Hit sphere" << std::endl;
 			continue;
 		}
 		else if (toLight.getTriangle()) {
@@ -137,14 +134,10 @@ ColorDbl Scene::sendShadowRays(Vertex &surfacePoint, ColorDbl surfaceColor, Dire
 				continue;
 			}
 			else {
-				//std::cout << surfacePoint.x << "," << surfacePoint.y << "," << surfacePoint.z << std::endl;
-				//std::cout << "(" << surfaceColor.x << "," << surfaceColor.y << "," << surfaceColor.z << ")" << std::endl;
-
 				// G = cos a * cos b / d^2
 				// qi length of the shadow ray
 				// a inclination angle of w-in relative to normal xn
 				// b inclination angle of w-in relative to normal qi
-
 
 				Direction lightsourceDir = glm::vec3(randPoint.x - surfacePoint.x, randPoint.y - surfacePoint.y, randPoint.z - surfacePoint.z);
 				float distancetoLight = glm::distance(surfacePoint, randPoint);
@@ -155,7 +148,7 @@ ColorDbl Scene::sendShadowRays(Vertex &surfacePoint, ColorDbl surfaceColor, Dire
 				if (cosBeta < 0)
 					cosBeta = 0;
 
-				float emittance = 15.0;
+				float emittance = 20.0;
 				float geometric = (cosAlpha * cosBeta) / glm::pow(distancetoLight, 2);
 
 				lightcontribution += surfaceColor * geometric * emittance;
@@ -163,7 +156,7 @@ ColorDbl Scene::sendShadowRays(Vertex &surfacePoint, ColorDbl surfaceColor, Dire
 			}
 		}
 		else {
-			//std::cout << "Doesnt hit anything: " << randPoint.x << ", " << randPoint.y << ", " << randPoint.z << std::endl;
+			//Doesnt hit anything
 		}
 	}
 

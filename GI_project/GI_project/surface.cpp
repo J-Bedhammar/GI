@@ -39,8 +39,10 @@ Ray Surface::reflectType( Ray& r, const Direction &normal ) {
 		glm::vec3 rayDirection = normalize(glm::vec3(IP) - glm::vec3(r.getStart()));
 
 		glm::vec3 newDirection = glm::vec4(glm::reflect(rayDirection, normal), 1);
+		//Alternative to glm::reflect: I - 2(I*N)N
+		//glm::vec3 newDirection = glm::normalize(rayDirection) - (2.0f * (glm::dot(glm::normalize(rayDirection), glm::normalize(normal)) * normal));
 
-		const float distance = 1000.0f;			// Check err when adding sphere - see Ray.cpp
+		const float distance = 1000.0f;	
 
 		auto start = IP;
 

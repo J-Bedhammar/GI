@@ -6,7 +6,6 @@ Ray::Ray(Vertex start, Vertex end, ColorDbl c)
 
 	if ((start.x != start.x) || (end.x != end.x)) {}
 		//std::cout << "Invalid input in Ray" << std::endl;
-
 }
 
 void Ray::triangleHit(Triangle* t, Vertex ip) {
